@@ -108,6 +108,8 @@ def build_pitch(art, brief, df=None, sc=None):
         if big <= big_cap * tot + 1e-6: break
         cand = [p for p in picked if p["tier"] in ("macro", "mega")]
         drop = min(cand, key=lambda p: p["past_roas"]); picked.remove(drop); spent[drop["tier"]] -= drop["fee"]; trimmed += 1
+    if not picked:
+        raise ValueError(f"Budget of {inr(budget)} is too small to book any eligible creator in {cat}; the cheapest typical fee is higher.")
     P = pd.DataFrame(picked)
     total_spent = float(P.fee.sum()) if len(P) else 0.0
     real_share = {t: spent[t] / total_spent if total_spent else 0 for t in TIERS}
@@ -116,7 +118,7 @@ def build_pitch(art, brief, df=None, sc=None):
     hist_share = (cat_df.groupby("tier").deal_value_inr.sum() / cat_df.deal_value_inr.sum()).reindex(TIERS).fillna(0).to_dict()
     blend = lambda sh, key: sum(sh[t] * per[t][key]["p50"] for t in TIERS)
     rec_roas, base_roas = blend(real_share, "roas"), blend(hist_share, "roas")
-    worst = pm.predict_brief  # creative-off scenario: direct pitch, CTA at the end, same mix
+    # creative-off scenario: direct pitch, CTA at the end, same mix
     off = {t: pm.predict_brief(art, dict(tier=t, creator_niche=cat, brand_category=cat, format=fmt, hook_type="direct_pitch",
                                          cta_position="end" if fmt in pm.VIDEO else "none", creator_deals_last_30d=1))["roas"]["p50"] for t in TIERS}
     rec_off = sum(real_share[t] * off[t] for t in TIERS)

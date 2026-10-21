@@ -155,6 +155,7 @@ def score():
 def pitch():
     j = request.get_json(force=True)
     try:
+        if "category" not in j or "budget_inr" not in j: return ok(dict(error="Both category and budget_inr are required."))
         brief = dict(brand=j.get("brand") or "the brand", brand_category=j["category"], budget_inr=float(j["budget_inr"]),
                      goal=j.get("goal", "sales"), format=j.get("format", "reel"))
         if j.get("languages"): brief["languages"] = j["languages"]

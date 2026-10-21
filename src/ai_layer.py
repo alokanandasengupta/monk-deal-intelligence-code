@@ -181,22 +181,26 @@ def score_script(art, script, brief, hook_override=None, cta_override=None, back
     b.setdefault("format", "reel")
     plays = pm.best_plays(art, b["tier"], b["creator_niche"], b["brand_category"], fmt=b["format"], top=100,
                           **{k: v for k, v in b.items() if k in ("creator_deals_last_30d", "fee_inr")})
-    cta = tags["cta_position"] if tags["cta_position"] != "none" else "end"
+    video = b["format"] in pm.VIDEO  # image formats have no CTA position: every option is cta="none"
+    mid = "mid" if video else "none"
+    cta = (tags["cta_position"] if tags["cta_position"] != "none" else "end") if video else "none"
     cur = plays[(plays.hook == tags["hook_type"]) & (plays.cta == cta)].iloc[0]
     rank = int(cur.name) + 1; n = len(plays)
     score = int(round(100 * (1 - (rank - 1) / (n - 1))))
     top = plays.iloc[0]
-    good_hooks = [h for h in plays[(plays.cta == "mid") & (plays.hook != "direct_pitch") & (plays.roas_vs_top > -0.03)].hook]
-    _mid = plays[(plays.cta == "mid") & (plays.hook.isin(good_hooks))]
+    good_hooks = [h for h in plays[(plays.cta == mid) & (plays.hook != "direct_pitch") & (plays.roas_vs_top > -0.03)].hook]
+    _mid = plays[(plays.cta == mid) & (plays.hook.isin(good_hooks))]
     rec_hook = tags["hook_type"] if (tags["hook_type"] != "direct_pitch" and tags["hook_type"] in good_hooks) else \
         (_mid.sort_values("eng_p50", ascending=False).iloc[0].hook if len(_mid) else top.hook)
-    best = plays[(plays.hook == rec_hook) & (plays.cta == "mid")].iloc[0]
+    best = plays[(plays.hook == rec_hook) & (plays.cta == mid)].iloc[0]
     recs = []
     if tags["hook_type"] == "direct_pitch":
         alt = plays[(plays.hook == rec_hook) & (plays.cta == cta)].iloc[0]
         recs.append(dict(change=f"Open with a {HOOK_LABEL[rec_hook]} hook instead of a plain brand introduction",
                          engagement_effect=_pct(alt.eng_p50, cur.eng_p50), roas_effect=_pct(alt.roas_p50, cur.roas_p50)))
-    if tags["cta_position"] == "none":
+    if not video:
+        pass
+    elif tags["cta_position"] == "none":
         recs.append(dict(change="No call to action found: add one in the middle of the video", engagement_effect=0.0,
                          roas_effect=_pct(plays[(plays.hook == tags["hook_type"]) & (plays.cta == "mid")].iloc[0].roas_p50, cur.roas_p50)))
     elif cta != "mid":
@@ -212,9 +216,9 @@ def score_script(art, script, brief, hook_override=None, cta_override=None, back
                          roas_effect=_pct(one["roas"]["p50"], now["roas"]["p50"]), note="effect shown is the gain from using a creator with 1 recent deal"))
     return dict(
         tags=tags, needs_input=False, score=score, rank=rank, n_options=n,
-        score_meaning="Where this hook and CTA placement rank among the 21 combinations for this brief (100 = best predicted ROAS, 0 = worst).",
+        score_meaning=f"Where this hook and CTA placement rank among the {n} combinations for this brief (100 = best predicted ROAS, 0 = worst).",
         current=dict(eng=[cur.eng_p10, cur.eng_p50, cur.eng_p90], roas=[cur.roas_p10, cur.roas_p50, cur.roas_p90]),
-        recommended=dict(hook=rec_hook, cta="mid", eng=[best.eng_p10, best.eng_p50, best.eng_p90], roas=[best.roas_p10, best.roas_p50, best.roas_p90],
+        recommended=dict(hook=rec_hook, cta=mid, eng=[best.eng_p10, best.eng_p50, best.eng_p90], roas=[best.roas_p10, best.roas_p50, best.roas_p90],
                          roas_uplift=_pct(best.roas_p50, cur.roas_p50), eng_uplift=_pct(best.eng_p50, cur.eng_p50),
                          near_tied_hooks=good_hooks),
         recommendations=recs, rewrite_offline=rewrite_offline(script, tags, rec_hook, brief), rewrite_llm=rewrite_llm(script, tags, rec_hook, brief),

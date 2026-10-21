@@ -22,6 +22,30 @@ The web page has four tabs:
 
 The earlier seven-tab layout is at `/classic`. A denser view is at `/advanced`.
 
+Needs Python 3.10+. A virtual environment is recommended:
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+The pipeline scripts `10_build_workbook.py` and `08_model_charts_and_card.py` also need `openpyxl` and `matplotlib` (`pip install openpyxl matplotlib`).
+If the saved model in `outputs/pitch_model.joblib` was trained with a different scikit-learn version, the app retrains it on start (about a minute).
+
+## API
+
+| Route | Method | Purpose |
+|---|---|---|
+| `/api/meta` | GET | Tiers, hooks, categories, formats, counts |
+| `/api/benchmarks` | GET | Tier, hook, CTA and saturation benchmarks |
+| `/api/creators?category=` | GET | Creators to back and creators to avoid |
+| `/api/playbook?tier=&category=&format=` | GET | Hook x CTA ranking from the model |
+| `/api/score` | POST | Script in (`script`, `tier`, `niche`, `category`, `format`), score and rewrite out |
+| `/api/pitch` | POST | Brief in (`category`, `budget_inr`, optional `goal`, `format`, `languages`), plan out |
+| `/api/evidence`, `/api/sample` | GET | Scorecard and a data sample |
+
+Errors from `/api/score` and `/api/pitch` come back as JSON `{"error": "..."}` with status 200.
+
 ## Repo layout
 
 ```
@@ -64,6 +88,12 @@ The data regenerates byte for byte, and the model metrics reproduce.
 - **Model:** gradient-boosted quantile regression, scored on creators the model has never seen. Ranges are calibrated so the 80% range holds about 80% of the time on held-out creators.
 - **Plan:** budget split across creator sizes with caps, then a creator list filtered for topic match, track record and overbooking.
 - **Script reader:** the only AI step. Offline rules by default. An optional Claude-based reader runs when `ANTHROPIC_API_KEY` is set (not tested here).
+
+## Known behaviour
+
+- Image formats (`static`, `story_set`) have no call-to-action position, so the script scorer ranks only the seven opening hooks for them.
+- If the budget is too small to book any eligible creator, the pitch builder returns an error instead of a plan.
+- A plan can leave part of the budget unallocated when there are too few eligible creators; the pitch says so.
 
 ## Limits
 
