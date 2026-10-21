@@ -168,4 +168,4 @@ def pitch():
 
 if __name__ == "__main__":
     print("\nMonk Pitch Copilot running at http://127.0.0.1:5050  (simulated data)\n")
-    app.run(host="127.0.0.1", port=5050, debug=False)
+    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 5050)), debug=False)

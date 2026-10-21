@@ -32,6 +32,20 @@ pip install -r requirements.txt
 The pipeline scripts `10_build_workbook.py` and `08_model_charts_and_card.py` also need `openpyxl` and `matplotlib` (`pip install openpyxl matplotlib`).
 If the saved model in `outputs/pitch_model.joblib` was trained with a different scikit-learn version, the app retrains it on start (about a minute).
 
+## Deploy on Render
+
+New Web Service, connect this repo, then:
+
+| Field | Value |
+|---|---|
+| Language | Python 3 |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `gunicorn app:app --workers 1 --timeout 120 --bind 0.0.0.0:$PORT` |
+| Environment variable | `PYTHON_VERSION` = `3.10.11` |
+| Optional | `ANTHROPIC_API_KEY` for the Claude-based script reader |
+
+Dependency versions are pinned so the saved model loads. The free plan sleeps when idle, so the first request after a pause is slow.
+
 ## API
 
 | Route | Method | Purpose |
