@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "engagement_rate": {
+      "r2": 0.7804846293015949,
+      "mae": 0.005606352620509303,
+      "mae_baseline": 0.00816884,
+      "skill_vs_baseline": 0.3136904847555708,
+      "spearman": 0.9049368735655122,
+      "coverage_p10_p90": 0.7353333333333333,
+      "below_p10": 0.134,
+      "above_p90": 0.13066666666666665,
+      "coverage_after_calibration_heldout": 0.8005301451417433,
+      "interval_widening": 0.000911461172767962
+    },
+    "roas": {
+      "r2": 0.3417155133122921,
+      "mae": 0.869373261148435,
+      "mae_baseline": 1.1297692666666665,
+      "skill_vs_baseline": 0.2304860055952117,
+      "spearman": 0.7296895414646817,
+      "coverage_p10_p90": 0.7449333333333333,
+      "below_p10": 0.13186666666666666,
+      "above_p90": 0.1232,
+      "coverage_after_calibration_heldout": 0.8003885316146139,
+      "interval_widening": 0.05509223849293798
+    }
+  },
+  "importance": {
+    "engagement_rate": {
+      "log_followers": 0.3128,
+      "tier": 0.271,
+      "creator_deals_last_30d": 0.2451,
+      "hook_type": 0.0813,
+      "niche_match": 0.0657,
+      "log_fee": 0.0114,
+      "brand_category": 0.0095,
+      "creator_niche": 0.0031,
+      "post_day": 0.0001,
+      "platform": 0.0,
+      "format": 0.0,
+      "cta_position": 0.0,
+      "duration_sec": 0.0,
+      "post_hour": 0.0,
+      "is_weekend": 0.0
+    },
+    "roas": {
+      "log_fee": 0.3499,
+      "log_followers": 0.2915,
+      "brand_category": 0.1154,
+      "cta_position": 0.089,
+      "creator_deals_last_30d": 0.0888,
+      "hook_type": 0.0321,
+      "tier": 0.0105,
+      "niche_match": 0.0062,
+      "duration_sec": 0.0061,
+      "post_hour": 0.0059,
+      "format": 0.0026,
+      "creator_niche": 0.0016,
+      "post_day": 0.0004,
+      "platform": 0.0,
+      "is_weekend": 0.0
+    }
+  },
+  "n": 7500,
+  "creators": 700
+}

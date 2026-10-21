@@ -1,0 +1,9 @@
+category,best_hook,best_eng,direct_pitch_eng,lift_vs_direct,n_best,n_direct,p
+beauty,story,0.0385,0.0252,0.5278,99,163,0.0
+fashion,social_proof,0.0368,0.0266,0.3835,101,175,0.0
+fitness,challenge,0.0426,0.0264,0.6155,68,186,0.0
+food,demo,0.049,0.0288,0.7031,96,169,0.0
+gaming,shock,0.0347,0.026,0.3372,76,152,0.0
+lifestyle,demo,0.0385,0.0303,0.2706,78,179,0.0008
+tech,question,0.0416,0.0266,0.5629,106,186,0.0
+travel,challenge,0.0352,0.0268,0.3134,66,159,0.0011

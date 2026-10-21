@@ -1,0 +1,13 @@
+{
+  "hook_direct_to_story_eng": null,
+  "eng_story_vs_direct": 0.23557441987817773,
+  "roas_story_vs_direct": 0.4367948563343311,
+  "eng_saturation_4_vs_1": -0.28786355308961287,
+  "roas_saturation_4_vs_1": -0.4422882173421693,
+  "eng_mismatch_vs_match": -0.18341189170548888,
+  "roas_cta_mid_vs_end": 0.8996510196768559,
+  "engagement_rate_cta_mid_vs_end": 0.0002508920880874843,
+  "eng_duration_45_vs_20": 0.011322965499344084,
+  "eng_hour20_vs_hour4": -0.002566307841738502,
+  "eng_saturday_vs_tuesday": 0.007499597450567608
+}

@@ -1,0 +1,481 @@
+{
+  "rows_in": 7500,
+  "rows_clean": 7500,
+  "overall_roas": 1.0886138508036123,
+  "pct_deals_losing": 0.5113333333333333,
+  "tier": {
+    "nano": {
+      "deals": 1165,
+      "roas": 1.618,
+      "spend_share": 0.009,
+      "med_eng_rate": 0.053,
+      "med_cpv": 0.986,
+      "pct_profitable": 0.493
+    },
+    "micro": {
+      "deals": 2248,
+      "roas": 1.845,
+      "spend_share": 0.052,
+      "med_eng_rate": 0.041,
+      "med_cpv": 0.952,
+      "pct_profitable": 0.562
+    },
+    "mid": {
+      "deals": 2300,
+      "roas": 1.793,
+      "spend_share": 0.179,
+      "med_eng_rate": 0.03,
+      "med_cpv": 0.952,
+      "pct_profitable": 0.542
+    },
+    "macro": {
+      "deals": 1314,
+      "roas": 1.061,
+      "spend_share": 0.358,
+      "med_eng_rate": 0.017,
+      "med_cpv": 1.499,
+      "pct_profitable": 0.363
+    },
+    "mega": {
+      "deals": 473,
+      "roas": 0.691,
+      "spend_share": 0.403,
+      "med_eng_rate": 0.01,
+      "med_cpv": 2.033,
+      "pct_profitable": 0.222
+    }
+  },
+  "F1": {
+    "bigshare": 0.7605195405453226,
+    "big_roas": 0.8652200560894392,
+    "mid_roas": 1.7931324929632473,
+    "big_lose": 0.6743144935646335,
+    "mid_lose": 0.4582608695652174,
+    "p": 7.558455041558821e-59,
+    "whatif_revenue_delta": 58629961.741384186,
+    "whatif_moved_spend": 63184800.0
+  },
+  "F2": {
+    "table": [
+      {
+        "category": "beauty",
+        "best_hook": "story",
+        "best_eng": 0.0385,
+        "direct_pitch_eng": 0.0252,
+        "lift_vs_direct": 0.5278,
+        "n_best": 99,
+        "n_direct": 163,
+        "p": 0.0
+      },
+      {
+        "category": "fashion",
+        "best_hook": "social_proof",
+        "best_eng": 0.0368,
+        "direct_pitch_eng": 0.0266,
+        "lift_vs_direct": 0.3835,
+        "n_best": 101,
+        "n_direct": 175,
+        "p": 0.0
+      },
+      {
+        "category": "fitness",
+        "best_hook": "challenge",
+        "best_eng": 0.0426,
+        "direct_pitch_eng": 0.0264,
+        "lift_vs_direct": 0.6155,
+        "n_best": 68,
+        "n_direct": 186,
+        "p": 0.0
+      },
+      {
+        "category": "food",
+        "best_hook": "demo",
+        "best_eng": 0.049,
+        "direct_pitch_eng": 0.0288,
+        "lift_vs_direct": 0.7031,
+        "n_best": 96,
+        "n_direct": 169,
+        "p": 0.0
+      },
+      {
+        "category": "gaming",
+        "best_hook": "shock",
+        "best_eng": 0.0347,
+        "direct_pitch_eng": 0.026,
+        "lift_vs_direct": 0.3372,
+        "n_best": 76,
+        "n_direct": 152,
+        "p": 0.0
+      },
+      {
+        "category": "lifestyle",
+        "best_hook": "demo",
+        "best_eng": 0.0385,
+        "direct_pitch_eng": 0.0303,
+        "lift_vs_direct": 0.2706,
+        "n_best": 78,
+        "n_direct": 179,
+        "p": 0.0008
+      },
+      {
+        "category": "tech",
+        "best_hook": "question",
+        "best_eng": 0.0416,
+        "direct_pitch_eng": 0.0266,
+        "lift_vs_direct": 0.5629,
+        "n_best": 106,
+        "n_direct": 186,
+        "p": 0.0
+      },
+      {
+        "category": "travel",
+        "best_hook": "challenge",
+        "best_eng": 0.0352,
+        "direct_pitch_eng": 0.0268,
+        "lift_vs_direct": 0.3134,
+        "n_best": 66,
+        "n_direct": 159,
+        "p": 0.0011
+      }
+    ],
+    "direct_med": 0.0271,
+    "other_med": 0.0335,
+    "gap": 0.23616236162361637,
+    "p": 4.603574881511336e-35,
+    "direct_share_of_videos": 0.25013703636031426,
+    "kruskal_p": 2.3248263055612987e-31
+  },
+  "F3": {
+    "eng_ok": 0.0353,
+    "eng_sat": 0.0212,
+    "drop": 0.3994334277620396,
+    "tier_controlled_drop": 0.39195934399598564,
+    "p": 2.945296212021855e-215,
+    "n_sat": 1557,
+    "pct_deals_sat": 0.2076,
+    "spend_sat": 88273000.0,
+    "roas_ok": 1.244238958220293,
+    "roas_sat": 0.511879963295685
+  },
+  "F4": {
+    "mid_ctr": 0.01873,
+    "end_ctr": 0.01181,
+    "start_ctr": 0.01439,
+    "lift_mid_vs_end": 0.5859441151566469,
+    "p": 0.0,
+    "n_mid": 1654,
+    "n_end": 2761,
+    "pct_deals_end": 0.5044765211035995,
+    "c2c_mid": 0.10111796117790872,
+    "c2c_end": 0.07163350191679287
+  },
+  "F5": [
+    {
+      "category": "beauty",
+      "best_bucket": "31-45s",
+      "best_eng": 0.031,
+      "worst_bucket": "21-30s",
+      "worst_eng": 0.0269,
+      "lift": 0.1543,
+      "kruskal_p": 0.661
+    },
+    {
+      "category": "fashion",
+      "best_bucket": "<=20s",
+      "best_eng": 0.0319,
+      "worst_bucket": "46-90s",
+      "worst_eng": 0.0139,
+      "lift": 1.295,
+      "kruskal_p": 0.088
+    },
+    {
+      "category": "fitness",
+      "best_bucket": "<=20s",
+      "best_eng": 0.0332,
+      "worst_bucket": "31-45s",
+      "worst_eng": 0.0294,
+      "lift": 0.1295,
+      "kruskal_p": 0.6799
+    },
+    {
+      "category": "food",
+      "best_bucket": "<=20s",
+      "best_eng": 0.0377,
+      "worst_bucket": "31-45s",
+      "worst_eng": 0.0326,
+      "lift": 0.1547,
+      "kruskal_p": 0.6049
+    },
+    {
+      "category": "gaming",
+      "best_bucket": "46-90s",
+      "best_eng": 0.0337,
+      "worst_bucket": "31-45s",
+      "worst_eng": 0.0234,
+      "lift": 0.4402,
+      "kruskal_p": 0.1169
+    },
+    {
+      "category": "lifestyle",
+      "best_bucket": "46-90s",
+      "best_eng": 0.0359,
+      "worst_bucket": "<=20s",
+      "worst_eng": 0.0334,
+      "lift": 0.0763,
+      "kruskal_p": 0.7155
+    },
+    {
+      "category": "tech",
+      "best_bucket": "<=20s",
+      "best_eng": 0.0363,
+      "worst_bucket": "21-30s",
+      "worst_eng": 0.032,
+      "lift": 0.1344,
+      "kruskal_p": 0.9584
+    },
+    {
+      "category": "travel",
+      "best_bucket": "31-45s",
+      "best_eng": 0.0338,
+      "worst_bucket": "<=20s",
+      "worst_eng": 0.0292,
+      "lift": 0.1595,
+      "kruskal_p": 0.5073
+    }
+  ],
+  "fit": {
+    "match": 0.0336,
+    "mismatch": 0.0269,
+    "p": 2.8349598986067017e-53,
+    "pct_mismatch": 0.222
+  },
+  "scorecard": {
+    "n": 628,
+    "top5": [
+      {
+        "creator_name": "Koushik Sen",
+        "creator_handle": "@koushik.styles",
+        "tier": "mid",
+        "creator_niche": "fashion",
+        "roas": 8.986,
+        "deals": 5
+      },
+      {
+        "creator_name": "Komal Rastogi",
+        "creator_handle": "@komal.travels",
+        "tier": "mid",
+        "creator_niche": "travel",
+        "roas": 7.371,
+        "deals": 6
+      },
+      {
+        "creator_name": "Shruti Bansal",
+        "creator_handle": "@shrutibansal",
+        "tier": "mid",
+        "creator_niche": "beauty",
+        "roas": 7.027,
+        "deals": 5
+      },
+      {
+        "creator_name": "Tushar Tiwari",
+        "creator_handle": "@tushar.styles2",
+        "tier": "micro",
+        "creator_niche": "fashion",
+        "roas": 5.138,
+        "deals": 6
+      },
+      {
+        "creator_name": "Bhavana Naidu",
+        "creator_handle": "@bhavana_naidu",
+        "tier": "mid",
+        "creator_niche": "travel",
+        "roas": 5.144,
+        "deals": 5
+      }
+    ],
+    "losers": [
+      {
+        "creator_name": "Vivek Arora",
+        "creator_handle": "@vivekarora",
+        "tier": "mega",
+        "creator_niche": "food",
+        "roas": 0.276,
+        "spend": 13149000,
+        "net_inr": -9518717,
+        "deals": 34
+      },
+      {
+        "creator_name": "Swetha Iyer",
+        "creator_handle": "@swetha.gamer",
+        "tier": "mega",
+        "creator_niche": "gaming",
+        "roas": 0.206,
+        "spend": 10251500,
+        "net_inr": -8139164,
+        "deals": 32
+      },
+      {
+        "creator_name": "Madhurima Dutta",
+        "creator_handle": "@themadhurimaglam",
+        "tier": "mega",
+        "creator_niche": "beauty",
+        "roas": 0.311,
+        "spend": 8161000,
+        "net_inr": -5622806,
+        "deals": 25
+      },
+      {
+        "creator_name": "Yash Yadav",
+        "creator_handle": "@yash.beauty",
+        "tier": "mega",
+        "creator_niche": "beauty",
+        "roas": 0.455,
+        "spend": 7445000,
+        "net_inr": -4059198,
+        "deals": 24
+      },
+      {
+        "creator_name": "Arjun Kurup",
+        "creator_handle": "@arjun_kurup",
+        "tier": "mega",
+        "creator_niche": "gaming",
+        "roas": 0.243,
+        "spend": 5244500,
+        "net_inr": -3971408,
+        "deals": 8
+      }
+    ],
+    "losers_total_loss": -46916131.0,
+    "losers_total_spend": 70159000.0,
+    "pct_creators_saturated": 0.1592356687898089,
+    "winners": [
+      {
+        "creator_name": "Abhishek Srivastava",
+        "creator_handle": "@abhishek.gadgets",
+        "tier": "mid",
+        "creator_niche": "tech",
+        "roas": 8.437,
+        "deals": 11
+      },
+      {
+        "creator_name": "Pooja Sharma",
+        "creator_handle": "@poojasharma",
+        "tier": "micro",
+        "creator_niche": "tech",
+        "roas": 7.791,
+        "deals": 8
+      },
+      {
+        "creator_name": "Komal Rastogi",
+        "creator_handle": "@komal.travels",
+        "tier": "mid",
+        "creator_niche": "travel",
+        "roas": 7.371,
+        "deals": 6
+      },
+      {
+        "creator_name": "Anusha Prasad",
+        "creator_handle": "@anusha_prasad",
+        "tier": "mid",
+        "creator_niche": "travel",
+        "roas": 6.582,
+        "deals": 15
+      },
+      {
+        "creator_name": "Harsh Tiwari",
+        "creator_handle": "@harsh_tiwari",
+        "tier": "mid",
+        "creator_niche": "beauty",
+        "roas": 6.071,
+        "deals": 7
+      }
+    ]
+  },
+  "lang": {
+    "Kannada": {
+      "deals": 533,
+      "roas": 1.339,
+      "med_eng": 0.029,
+      "avg_fee": 52064.728
+    },
+    "Telugu": {
+      "deals": 805,
+      "roas": 1.269,
+      "med_eng": 0.029,
+      "avg_fee": 46545.342
+    },
+    "Hinglish": {
+      "deals": 391,
+      "roas": 1.246,
+      "med_eng": 0.034,
+      "avg_fee": 32961.637
+    },
+    "Marathi": {
+      "deals": 603,
+      "roas": 1.21,
+      "med_eng": 0.037,
+      "avg_fee": 37641.791
+    },
+    "Tamil": {
+      "deals": 499,
+      "roas": 1.202,
+      "med_eng": 0.031,
+      "avg_fee": 58277.555
+    },
+    "Gujarati": {
+      "deals": 390,
+      "roas": 1.176,
+      "med_eng": 0.035,
+      "avg_fee": 41770.513
+    },
+    "Hindi": {
+      "deals": 2790,
+      "roas": 1.06,
+      "med_eng": 0.03,
+      "avg_fee": 63467.742
+    },
+    "Malayalam": {
+      "deals": 438,
+      "roas": 0.99,
+      "med_eng": 0.037,
+      "avg_fee": 53937.215
+    },
+    "Bengali": {
+      "deals": 556,
+      "roas": 0.898,
+      "med_eng": 0.037,
+      "avg_fee": 36944.245
+    },
+    "Punjabi": {
+      "deals": 265,
+      "roas": 0.893,
+      "med_eng": 0.035,
+      "avg_fee": 61837.736
+    },
+    "English": {
+      "deals": 230,
+      "roas": 0.814,
+      "med_eng": 0.022,
+      "avg_fee": 137397.826
+    }
+  },
+  "city_type": {
+    "metro": {
+      "deals": 1871,
+      "spend": 113542500,
+      "revenue": 115130096,
+      "med_eng": 0.031,
+      "avg_fee": 60685.462,
+      "roas": 1.014
+    },
+    "tier2/3": {
+      "deals": 5629,
+      "spend": 301863000,
+      "revenue": 337086085,
+      "med_eng": 0.032,
+      "avg_fee": 53626.399,
+      "roas": 1.117
+    }
+  },
+  "city_type_p_eng": 0.11827048879483769
+}

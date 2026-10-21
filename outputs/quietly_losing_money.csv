@@ -1,0 +1,11 @@
+creator_id,creator_name,creator_handle,creator_language,creator_city,tier,creator_niche,deals,spend,revenue,med_eng,eng_sd,max_burst,sat_deals,roas,consistency,saturated_flag,net_inr,value_score
+C289,Vivek Arora,@vivekarora,Hindi,Mumbai,mega,food,34,13149000,3630283,0.008,0.003,12,20,0.276,0.627,True,-9518717,1.943
+C432,Swetha Iyer,@swetha.gamer,English,Chennai,mega,gaming,32,10251500,2112336,0.011,0.004,11,17,0.206,0.667,True,-8139164,3.129
+C229,Madhurima Dutta,@themadhurimaglam,Bengali,Siliguri,mega,beauty,25,8161000,2538194,0.008,0.003,9,10,0.311,0.673,True,-5622806,4.18
+C584,Yash Yadav,@yash.beauty,Hindi,Jaipur,mega,beauty,24,7445000,3385802,0.009,0.003,8,11,0.455,0.647,True,-4059198,5.693
+C509,Arjun Kurup,@arjun_kurup,Malayalam,Kochi,mega,gaming,8,5244500,1273092,0.014,0.004,1,0,0.243,0.715,False,-3971408,21.131
+C405,Divya Tiwari,@divya.fitness,Hindi,Lucknow,mega,fitness,29,8814500,4971186,0.008,0.004,11,15,0.564,0.575,True,-3843314,6.895
+C570,Gaurav Jain,@gaurav_jain,Hindi,Dehradun,macro,gaming,34,5095500,1797962,0.016,0.007,10,18,0.353,0.549,True,-3297538,2.245
+C102,Gagan Bajwa,@gagan.live40,Punjabi,Jalandhar,macro,gaming,33,5203500,1936407,0.013,0.005,12,19,0.372,0.632,True,-3267093,4.244
+C290,Harsh Gupta,@harshplays42,Hindi,Noida,mega,gaming,6,3357000,489038,0.01,0.003,1,0,0.146,0.743,False,-2867962,22.739
+C110,Aarohi Rastogi,@aarohirastogi,Hindi,Patna,macro,fashion,34,3437500,1108569,0.012,0.004,13,19,0.322,0.667,True,-2328931,3.973

@@ -1,0 +1,414 @@
+{
+ "hooks_by_cat": [
+  {
+   "category": "beauty",
+   "best_hook": "story",
+   "best_eng": 0.0385,
+   "direct_pitch_eng": 0.0252,
+   "lift_vs_direct": 0.5278,
+   "n_best": 99,
+   "n_direct": 163,
+   "p": 0.0
+  },
+  {
+   "category": "fashion",
+   "best_hook": "social_proof",
+   "best_eng": 0.0368,
+   "direct_pitch_eng": 0.0266,
+   "lift_vs_direct": 0.3835,
+   "n_best": 101,
+   "n_direct": 175,
+   "p": 0.0
+  },
+  {
+   "category": "fitness",
+   "best_hook": "challenge",
+   "best_eng": 0.0426,
+   "direct_pitch_eng": 0.0264,
+   "lift_vs_direct": 0.6155,
+   "n_best": 68,
+   "n_direct": 186,
+   "p": 0.0
+  },
+  {
+   "category": "food",
+   "best_hook": "demo",
+   "best_eng": 0.049,
+   "direct_pitch_eng": 0.0288,
+   "lift_vs_direct": 0.7031,
+   "n_best": 96,
+   "n_direct": 169,
+   "p": 0.0
+  },
+  {
+   "category": "gaming",
+   "best_hook": "shock",
+   "best_eng": 0.0347,
+   "direct_pitch_eng": 0.026,
+   "lift_vs_direct": 0.3372,
+   "n_best": 76,
+   "n_direct": 152,
+   "p": 0.0
+  },
+  {
+   "category": "lifestyle",
+   "best_hook": "demo",
+   "best_eng": 0.0385,
+   "direct_pitch_eng": 0.0303,
+   "lift_vs_direct": 0.2706,
+   "n_best": 78,
+   "n_direct": 179,
+   "p": 0.0008
+  },
+  {
+   "category": "tech",
+   "best_hook": "question",
+   "best_eng": 0.0416,
+   "direct_pitch_eng": 0.0266,
+   "lift_vs_direct": 0.5629,
+   "n_best": 106,
+   "n_direct": 186,
+   "p": 0.0
+  },
+  {
+   "category": "travel",
+   "best_hook": "challenge",
+   "best_eng": 0.0352,
+   "direct_pitch_eng": 0.0268,
+   "lift_vs_direct": 0.3134,
+   "n_best": 66,
+   "n_direct": 159,
+   "p": 0.0011
+  }
+ ],
+ "hour_whatif": {
+  "roas": 0.08810810864313501,
+  "eng": -0.0018005000656907133,
+  "n": 24
+ },
+ "hour_raw": 0.18248639994177895,
+ "myths": [
+  {
+   "title": "Creator's language",
+   "groups": [
+    {
+     "name": "Hindi",
+     "n": 2790,
+     "eng_idx": 0.982587674989176,
+     "roas_idx": 0.9567608464150688
+    },
+    {
+     "name": "Telugu",
+     "n": 805,
+     "eng_idx": 0.9467455621301776,
+     "roas_idx": 0.8455392809587217
+    },
+    {
+     "name": "Marathi",
+     "n": 603,
+     "eng_idx": 1.0,
+     "roas_idx": 0.9992076069730585
+    },
+    {
+     "name": "Bengali",
+     "n": 556,
+     "eng_idx": 0.9773223069793968,
+     "roas_idx": 0.9408831337305329
+    },
+    {
+     "name": "Kannada",
+     "n": 533,
+     "eng_idx": 1.0121951219512195,
+     "roas_idx": 1.1584541062801932
+    },
+    {
+     "name": "Tamil",
+     "n": 499,
+     "eng_idx": 1.0714285714285714,
+     "roas_idx": 1.0308582449373191
+    },
+    {
+     "name": "Malayalam",
+     "n": 438,
+     "eng_idx": 1.0345755359161917,
+     "roas_idx": 1.0084294587400175
+    },
+    {
+     "name": "Hinglish",
+     "n": 391,
+     "eng_idx": 1.017751479289941,
+     "roas_idx": 1.008716323296355
+    },
+    {
+     "name": "Gujarati",
+     "n": 390,
+     "eng_idx": 1.0099800895968145,
+     "roas_idx": 1.269969526871828
+    },
+    {
+     "name": "Punjabi",
+     "n": 265,
+     "eng_idx": 1.051219512195122,
+     "roas_idx": 1.1006339144215531
+    },
+    {
+     "name": "English",
+     "n": 230,
+     "eng_idx": 1.0633500659020163,
+     "roas_idx": 1.093608549638898
+    }
+   ],
+   "p_eng": 0.3759190483474361,
+   "p_roas": 0.9884515331870976,
+   "creators": 700
+  },
+  {
+   "title": "Creator's city type",
+   "groups": [
+    {
+     "name": "Tier 2 and 3 cities",
+     "n": 5629,
+     "eng_idx": 1.0009460737937559,
+     "roas_idx": 1.0062724014336917
+    },
+    {
+     "name": "Metro",
+     "n": 1871,
+     "eng_idx": 0.9863945578231293,
+     "roas_idx": 0.968944099378882
+    }
+   ],
+   "p_eng": 0.5996222374481044,
+   "p_roas": 0.8004117074564339,
+   "creators": 700
+  },
+  {
+   "title": "Video length",
+   "groups": [
+    {
+     "name": "<=20s",
+     "n": 1072,
+     "eng_idx": 0.9881656804733728,
+     "roas_idx": 0.9510992802918268
+    },
+    {
+     "name": "21-30s",
+     "n": 841,
+     "eng_idx": 1.0121951219512195,
+     "roas_idx": 1.0896184560780835
+    },
+    {
+     "name": "31-45s",
+     "n": 1239,
+     "eng_idx": 1.0028382213812677,
+     "roas_idx": 1.03486529318542
+    },
+    {
+     "name": "46-90s",
+     "n": 1200,
+     "eng_idx": 0.9902439024390243,
+     "roas_idx": 1.0824827330068096
+    },
+    {
+     "name": "90s+",
+     "n": 1121,
+     "eng_idx": 1.0,
+     "roas_idx": 0.867790594498669
+    }
+   ],
+   "p_eng": 0.320529854615928,
+   "p_roas": 0.2071178094935946,
+   "creators": 698
+  },
+  {
+   "title": "Time of posting",
+   "groups": [
+    {
+     "name": "Morning",
+     "n": 1247,
+     "eng_idx": 0.9902439024390243,
+     "roas_idx": 0.9174800354924578
+    },
+    {
+     "name": "Afternoon",
+     "n": 2324,
+     "eng_idx": 1.006226553737866,
+     "roas_idx": 0.9499359163955436
+    },
+    {
+     "name": "Evening",
+     "n": 3025,
+     "eng_idx": 1.0,
+     "roas_idx": 1.10752688172043
+    },
+    {
+     "name": "Late night",
+     "n": 904,
+     "eng_idx": 0.9959341352435014,
+     "roas_idx": 0.9161857090704206
+    }
+   ],
+   "p_eng": 0.18190178799651036,
+   "p_roas": 5.587241908442874e-09,
+   "creators": 700
+  },
+  {
+   "title": "Day of week",
+   "groups": [
+    {
+     "name": "Weekday",
+     "n": 5339,
+     "eng_idx": 1.0,
+     "roas_idx": 1.0
+    },
+    {
+     "name": "Weekend",
+     "n": 2161,
+     "eng_idx": 1.002439024390244,
+     "roas_idx": 1.000966183574879
+    }
+   ],
+   "p_eng": 0.9377234219475006,
+   "p_roas": 0.5222422419176125,
+   "creators": 700
+  }
+ ],
+ "robustness": {
+  "tier_roas_gap": {
+   "point": 0.9279124368738081,
+   "lo": 0.689432690631362,
+   "hi": 1.1639285871773368
+  },
+  "direct_pitch_gap": {
+   "point": 0.19104477611940307,
+   "lo": 0.1550151975683891,
+   "hi": 0.22353280706221892
+  },
+  "saturation_drop": {
+   "point": 0.3994334277620396,
+   "lo": 0.348859353243386,
+   "hi": 0.45488147875214924
+  },
+  "cta_mid_vs_end_lift": {
+   "point": 0.5859441151566469,
+   "lo": 0.5560924416538955,
+   "hi": 0.6148188470520575
+  },
+  "mismatch_drop": {
+   "point": 0.19940476190476186,
+   "lo": 0.1724669903972066,
+   "hi": 0.2273192854186784
+  }
+ },
+ "whatif": {
+  "hook_direct_to_story_eng": null,
+  "eng_story_vs_direct": 0.23557441987817773,
+  "roas_story_vs_direct": 0.4367948563343311,
+  "eng_saturation_4_vs_1": -0.28786355308961287,
+  "roas_saturation_4_vs_1": -0.4422882173421693,
+  "eng_mismatch_vs_match": -0.18341189170548888,
+  "roas_cta_mid_vs_end": 0.8996510196768559,
+  "engagement_rate_cta_mid_vs_end": 0.0002508920880874843,
+  "eng_duration_45_vs_20": 0.011322965499344084,
+  "eng_hour20_vs_hour4": -0.002566307841738502,
+  "eng_saturday_vs_tuesday": 0.007499597450567608
+ },
+ "model": {
+  "metrics": {
+   "engagement_rate": {
+    "r2": 0.7804846293015949,
+    "mae": 0.005606352620509303,
+    "mae_baseline": 0.00816884,
+    "skill_vs_baseline": 0.3136904847555708,
+    "spearman": 0.9049368735655122,
+    "coverage_p10_p90": 0.7353333333333333,
+    "below_p10": 0.134,
+    "above_p90": 0.13066666666666665,
+    "coverage_after_calibration_heldout": 0.8005301451417433,
+    "interval_widening": 0.000911461172767962
+   },
+   "roas": {
+    "r2": 0.3417155133122921,
+    "mae": 0.869373261148435,
+    "mae_baseline": 1.1297692666666665,
+    "skill_vs_baseline": 0.2304860055952117,
+    "spearman": 0.7296895414646817,
+    "coverage_p10_p90": 0.7449333333333333,
+    "below_p10": 0.13186666666666666,
+    "above_p90": 0.1232,
+    "coverage_after_calibration_heldout": 0.8003885316146139,
+    "interval_widening": 0.05509223849293798
+   }
+  },
+  "importance": {
+   "engagement_rate": {
+    "log_followers": 0.3128,
+    "tier": 0.271,
+    "creator_deals_last_30d": 0.2451,
+    "hook_type": 0.0813,
+    "niche_match": 0.0657,
+    "log_fee": 0.0114,
+    "brand_category": 0.0095,
+    "creator_niche": 0.0031,
+    "post_day": 0.0001,
+    "platform": 0.0,
+    "format": 0.0,
+    "cta_position": 0.0,
+    "duration_sec": 0.0,
+    "post_hour": 0.0,
+    "is_weekend": 0.0
+   },
+   "roas": {
+    "log_fee": 0.3499,
+    "log_followers": 0.2915,
+    "brand_category": 0.1154,
+    "cta_position": 0.089,
+    "creator_deals_last_30d": 0.0888,
+    "hook_type": 0.0321,
+    "tier": 0.0105,
+    "niche_match": 0.0062,
+    "duration_sec": 0.0061,
+    "post_hour": 0.0059,
+    "format": 0.0026,
+    "creator_niche": 0.0016,
+    "post_day": 0.0004,
+    "platform": 0.0,
+    "is_weekend": 0.0
+   }
+  },
+  "n": 7500,
+  "creators": 700
+ },
+ "tagger": {
+  "sim_n": 1000,
+  "sim_hook_acc": 0.901,
+  "sim_cta_acc": 1.0,
+  "hand_n": 42,
+  "hand_hook_acc": 1.0,
+  "hand_cta_acc": 1.0,
+  "hand_unclear": 0,
+  "hook_acc_by_type": {
+   "story": 1.0,
+   "question": 1.0,
+   "shock": 1.0,
+   "social_proof": 1.0,
+   "challenge": 1.0,
+   "demo": 1.0,
+   "direct_pitch": 1.0
+  },
+  "top_confusions": [],
+  "language_style_hinglish_detected": 14
+ },
+ "facts": {
+  "n_sat": 1557,
+  "pct_sat": 0.2076,
+  "spend_sat": 88273000.0,
+  "mismatch_share": 0.222,
+  "match_eng": 0.0336,
+  "mismatch_eng": 0.0269,
+  "n_mid": 1654,
+  "n_end": 2761,
+  "c2c_mid": 0.10111796117790872,
+  "c2c_end": 0.07163350191679287
+ }
+}

@@ -1,0 +1,82 @@
+# Hand-written test scripts in varied English and Hinglish wording, NOT generated from the simulator's templates.
+# (script, true_hook, true_cta_position). Written and labelled by the builder, so treat accuracy as indicative, not definitive.
+TESTSET = [
+ # story
+ ("Pichle mahine meri skin itni kharab thi ki shoot cancel karna pada. Phir ek dost ne ye serum try karne ko bola. Ab compliments mil rahe hain. Link bio mein hai, code GLOW10 use karo.", "story", "end"),
+ ("I was this close to quitting my morning runs. Then my cousin gifted me these shoes and everything changed. Two weeks later I'm doing 5k without stopping. Tap the link in my bio to grab a pair.", "story", "end"),
+ ("Three years ago I couldn't even boil an egg. Seriously. Use code COOK15 at checkout if you want the starter kit I began with. Today I host dinner parties every month.", "story", "mid"),
+ ("Ek baar meri flight miss ho gayi aur mere paas sirf ek bag tha. Us din samajh aaya ki light packing kya hoti hai. Ye wala backpack ab mera daily companion hai. Order karne ke liye link niche hai.", "story", "end"),
+ ("When I moved to Bangalore I was lonely and broke. A random roommate introduced me to this app. Download it from the link in my bio, it genuinely helped me budget. Six months later I had savings.", "story", "mid"),
+ ("Use code SKIN20 for twenty percent off. Last summer my sunscreen melted off my face during a trek. Since then, I only trust this one.", "story", "start"),
+ # question
+ ("Kya aapko pata hai ki aapka protein powder shayad kaam hi nahi kar raha? Maine teen alag brands test kiye. Result kaafi surprising tha. Link bio mein hai, check kar lo.", "question", "end"),
+ ("Ever wondered why your phone battery dies by evening? I tracked mine for a week. Turns out it's one setting. Grab the charger I switched to, link below.", "question", "end"),
+ ("Is this serum actually worth 899 rupees? Use code DEW10 if you want to try it yourself. I used it for two weeks and here is what happened.", "question", "mid"),
+ ("Why do all budget earbuds sound the same? I tested five pairs under 2000. One clearly won. Details in the link.", "question", "end"),
+ ("What if your skincare routine took only three steps? Tap the link in my bio to see my kit. I cut mine down and my skin got better.", "question", "mid"),
+ ("Kya sach mein ye ghee itna alag hota hai? Maine blind taste test kiya. Aap bhi try karo, link description mein hai.", "question", "end"),
+ # shock
+ ("Wait, did this really cost only 499? Stop scrolling, the quality is unreal. I honestly didn't expect this. Order from the link in my bio.", "shock", "end"),
+ ("Yeh dekh ke mera dimaag ghoom gaya. Itna sasta aur itna accha, believe nahi hota. Sabko dikhana tha. Link bio mein hai.", "shock", "end"),
+ ("I cannot believe this actually works. Use code WOW15 right now, the price drops tonight. The results were genuinely insane.", "shock", "mid"),
+ ("Okay this is not a drill. This phone does 120fps gaming at this price. Insane. Tap the link below before it sells out.", "shock", "end"),
+ ("Use code BOOST at checkout. You won't believe what this blender did to my frozen mango. Absolute chaos, in a good way.", "shock", "start"),
+ ("Bhai ye kya hai! Sirf 299 mein ye sab milta hai? Pehle maine socha fake hoga. Link description mein, jaldi lo.", "shock", "end"),
+ # social proof
+ ("Mere DMs mein roz kam se kam 50 log pooch rahe the ye kya hai. Toh aaj finally review. Honestly it lives up to the hype. Link bio mein hai.", "social_proof", "end"),
+ ("Half my friends switched to this brand after I showed them. Everyone in my gym is using it now. It's easy to see why. Link in bio if you want to try.", "social_proof", "end"),
+ ("You guys asked me about my skincare so many times. Use code ROUTINE10 if you want my exact products. Here's the whole shelf.", "social_proof", "mid"),
+ ("This was sold out three times last month and now I understand why. Thousands of reviews can't be wrong. Grab yours via the link below.", "social_proof", "end"),
+ ("Sab log yahi kharid rahe hain aajkal. Code TREND20 use karo for discount. Maine bhi try kiya aur mujhe pasand aaya.", "social_proof", "mid"),
+ ("Over ten thousand of you requested this review. So here it is, no filter. Honestly it's good. Link below.", "social_proof", "end"),
+ # challenge
+ ("I only used this moisturiser for seven days. Day one, super dry. Day seven, glowing. Try it with me, link in bio.", "challenge", "end"),
+ ("Seven din tak sirf ye protein shake aur no junk food. Day one bahut mushkil tha. Day seven mein farak dikha. Link bio mein hai, challenge join karo.", "challenge", "end"),
+ ("Day one of my no-sugar challenge. Use code FIT10 for the sugar-free snack box I'm using. Let's see how long I last.", "challenge", "mid"),
+ ("Try this with me for one week and tell me the difference. I'm drinking only this tea for seven days. No cheating. Link below.", "challenge", "end"),
+ ("Thirty days, one outfit rule, no repeats. Code STYLE15 gets you ten percent off the basics I'm using. Let's go.", "challenge", "mid"),
+ ("Maine 5 din tak sirf ye sunscreen use kiya aur koi aur product nahi. Pehle din thoda sticky laga. Din paanch tak skin soft thi. Link bio mein hai.", "challenge", "end"),
+ # demo
+ ("Watch how fast this comes together. Two scoops, one cup of milk, thirty seconds. Done. Link below for the mixer.", "demo", "end"),
+ ("Let me show you how I do my everyday makeup in five minutes. Foundation first, then concealer, blush last. Simple. Products linked in my bio.", "demo", "end"),
+ ("Here's the full process, start to finish. Use code BAKE10 for this oven, it's what I use. First preheat, then slide the tray in.", "demo", "mid"),
+ ("Dekho kaise main apna pura outfit teen minute mein style karti hoon. Pehle jacket, phir scarf. Ye jacket link mein hai.", "demo", "end"),
+ ("Step by step, here's how I set up my desk. Grab the lamp via the link in my bio. Then cable management, then monitor arm.", "demo", "mid"),
+ ("Aaj main dikhata hoon ki ye air fryer mein paneer tikka kaise banta hai. Marinate, fry, done. Air fryer ka link niche hai.", "demo", "end"),
+ # direct pitch
+ ("Hello everyone, today I want to tell you about this new moisturiser. It has ceramides and hyaluronic acid. It is available on the website. Link in bio.", "direct_pitch", "end"),
+ ("This video is sponsored by Boltbuds. They sent me their latest earbuds. The battery lasts forty hours. Use my link to buy.", "direct_pitch", "end"),
+ ("Hi guys, in collaboration with Brewtale today. Use code BREW10 for ten percent off. They have a great range of coffee.", "direct_pitch", "mid"),
+ ("Namaste dosto, aaj main aapko ek nayi brand ke baare mein batane wala hoon. Unka product kaafi accha hai. Link bio mein hai.", "direct_pitch", "end"),
+ ("Today I'm sharing a paid partnership with Urbanloom. Their new collection is out now. Check the link below.", "direct_pitch", "end"),
+ ("Hello dosto, aaj ki video Glowvera ke saath hai. Code GLOW20 use karo discount ke liye. Unke products affordable hain.", "direct_pitch", "mid"),
+]
+
+# Adversarial set: written AFTER the rules were frozen, deliberately less obvious wording (contractions, rhetorical openers,
+# Hinglish without stock phrases, CTA phrased unusually). Indicative of how rules cope with messy real scripts.
+HARD = [
+ ("My sister borrowed my hair dryer for a week and I finally understood why people rave about this one. Bought my own the same night. Link's in the caption.", "story", "end"),
+ ("Honestly, mornings were never my thing. Then I found a routine that stuck, and this kettle is part of it. Get it using the link below.", "story", "end"),
+ ("Remember that trip where I lost my luggage? Yeah, this is the bag I bought right after. Link below.", "story", "end"),
+ ("Kal raat meri dadi ne bola, beta ye cream try kar. Maine socha chalo dekhte hain. Aaj subah results dekh ke hairan hoon. Link niche hai.", "story", "end"),
+ ("I still remember the first time I tried this chai. It was raining and I was exhausted. Now it's a daily ritual. Order using the link in my bio.", "story", "end"),
+ ("Should you really spend 2k on a hair straightener? Let's find out. I've used it daily for ten days. Link in bio if you're tempted.", "question", "end"),
+ ("Which protein bar actually tastes like a chocolate bar? I ate eleven so you don't have to. Winner's linked below.", "question", "end"),
+ ("Aapne kabhi socha hai ki hotel mein chai itni mehengi kyun hoti hai? Main khud banati hoon ab. Ye kettle le lo, link bio mein hai.", "question", "end"),
+ ("This costs less than my lunch and it replaced my entire skincare shelf. Genuinely mad about it. Use code LUNCH for a discount.", "shock", "end"),
+ ("Nobody warned me it would be THIS good. Honestly shook. Grab it from the link in my bio.", "shock", "end"),
+ ("Gaya mera budget ab. Ye jacket sirf 999 mein mil raha hai. Pagal hai kya. Link description mein.", "shock", "end"),
+ ("My entire office ordered this after seeing it on my desk. Three people have asked for the link this week. Here it is below.", "social_proof", "end"),
+ ("Everyone's talking about this serum, so I finally caved. Verdict at the end. Link in bio.", "social_proof", "end"),
+ ("Maine suna tha sabko ye pasand aa raha hai, toh maine bhi order kar liya. Sach mein worth it hai. Link bio mein hai.", "social_proof", "end"),
+ ("One week, zero coffee, only this matcha. Let's see if I survive. Link in bio if you're joining.", "challenge", "end"),
+ ("Sirf ek hafta, sirf ye face wash. Dekhte hain kya hota hai. Link bio mein hai agar tum bhi karna chahte ho.", "challenge", "end"),
+ ("Here's my exact 3-step routine with this serum. Cleanse, apply, moisturise. That's it. Link in bio.", "demo", "end"),
+ ("Quick tutorial: how to wear a saree in two minutes using this pre-pleated one. Link below.", "demo", "end"),
+ ("Chalo ek baar saath mein try karte hain. Pehle base lagao, phir blush. Aisa hi karna hai. Products ka link bio mein hai.", "demo", "end"),
+ ("Before we start, a quick note. This one's a paid partnership with Nykaa. Okay now the review. Link below.", "direct_pitch", "end"),
+ ("Hey everyone, new video, new product. Let's talk about this protein bar from FitFuel. It tastes ok. Link in description.", "direct_pitch", "end"),
+ ("Namaste! Aaj hum baat karenge ek naye brand ki. Unka naya range launch hua hai. Link bio mein.", "direct_pitch", "end"),
+ ("Welcome back to my channel. Today's video is brought to you by Zenwatch. Their new watch has a great display. Use my code ZEN10.", "direct_pitch", "end"),
+ ("Replacing my entire makeup bag with just three products from this brand. Starting today. Link in bio.", "challenge", "end"),
+]

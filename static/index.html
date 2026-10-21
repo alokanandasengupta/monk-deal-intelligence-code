@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monk Deal Intelligence</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a data investigation in five tabs: Start here, Playground, Proof, How it works. */
+:root{color-scheme:light;--bg:#f6f5f1;--card:#fff;--ink:#1b1b1a;--muted:#66655f;--line:#e4e2da;--accent:#1f5eff;--accent-ink:#fff;--good:#0f7b4a;--bad:#b3261e;--warn:#8a5a00;--chip:#efede6;--soft:#eaf0ff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121211;--card:#1b1b19;--ink:#efede6;--muted:#a3a198;--line:#2c2b27;--accent:#6f95ff;--accent-ink:#0b1022;--good:#4cc38a;--bad:#ff7b72;--warn:#e0b040;--chip:#262522;--soft:#1c2440;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121211;--card:#1b1b19;--ink:#efede6;--muted:#a3a198;--line:#2c2b27;--accent:#6f95ff;--accent-ink:#0b1022;--good:#4cc38a;--bad:#ff7b72;--warn:#e0b040;--chip:#262522;--soft:#1c2440;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding-block:0 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sub{color:var(--muted);font-size:14.5px}
+.badge{display:inline-block;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12.5px;color:var(--muted)}
+h1{font-size:38px;line-height:1.12;letter-spacing:-.02em;margin:14px 0 12px;text-wrap:balance}
+h2{font-size:26px;line-height:1.22;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance}
+h3{font-size:18px;margin:0 0 4px}
+p{margin:0 0 14px}
+.lead{font-size:20px;line-height:1.5}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:2px;overflow-x:auto;padding:6px 0}
+.nav button{background:none;border:0;font:inherit;font-size:14.5px;color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.nav button:hover{background:var(--chip);color:var(--ink)}
+.nav button[aria-selected="true"]{color:var(--ink);font-weight:650;background:var(--chip)}
+.kicker{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.finding{padding-top:54px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}h1{font-size:30px}h2{font-size:23px}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stat .k{font-size:13px;color:var(--muted)} .stat .v{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.2} .stat .n{font-size:13px;color:var(--muted)}
+.ev{background:var(--chip);border-radius:12px;padding:12px 14px;margin:14px 0 0;font-size:15px;line-height:1.55}
+.ev b.l{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.ev ul{margin:0;padding-left:18px} .ev li{margin:2px 0}
+.bars{display:grid;gap:8px;margin:12px 0 6px}
+.bars .r{display:grid;grid-template-columns:112px 1fr 64px;gap:10px;align-items:center;font-size:14.5px}
+.bars .t{background:var(--chip);border-radius:6px;height:16px;position:relative;overflow:hidden}
+.bars .t i{display:block;height:100%;border-radius:6px}
+.bars .t u{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.5}
+.pair .r{display:grid;grid-template-columns:84px 1fr 1fr;gap:12px;align-items:center;font-size:14.5px;margin:7px 0}
+.pair .h{display:grid;grid-template-columns:84px 1fr 1fr;gap:12px;font-size:12.5px;color:var(--muted);font-weight:600}
+.pair .c{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:center}
+.pair .t{background:var(--chip);border-radius:6px;height:16px;position:relative;overflow:hidden}
+.pair .t i{display:block;height:100%;border-radius:6px} .pair .t u{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.5}
+.good{color:var(--good)} .bad{color:var(--bad)} .warn{color:var(--warn)}
+.gi{background:var(--good)} .bi{background:var(--bad)} .ai{background:var(--accent)} .mi{background:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14.5px} th,td{padding:7px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top} th{color:var(--muted);font-size:12.5px;font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums} .scroll{overflow-x:auto}
+#wbacked table,#wnot table{width:max-content;min-width:100%;font-size:13.5px} #wbacked td,#wbacked th,#wnot td,#wnot th{white-space:nowrap;padding:7px 10px} #wbacked td:first-child,#wnot td:first-child,#wbacked th:first-child,#wnot th:first-child{position:sticky;left:0;background:var(--card,var(--bg));z-index:1}
+.heat td{text-align:center;font-variant-numeric:tabular-nums;padding:6px 3px;font-size:13px} .heat td.h{text-align:left;font-weight:600;white-space:nowrap}
+.heat th{text-align:center;font-size:12px}
+.note{font-size:15px;color:var(--muted);border-left:3px solid var(--line);padding:2px 0 2px 12px;margin:12px 0}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chip{background:var(--chip);border-radius:999px;padding:3px 12px;font-size:14.5px}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600}
+.p-yes{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)} .p-no{background:var(--chip);color:var(--muted)} .p-mid{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.picks{display:grid;gap:10px;grid-template-columns:1fr 1fr;margin:12px 0 18px}
+@media(max-width:640px){.picks{grid-template-columns:1fr}}
+.pick{text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;font:inherit;color:var(--ink);cursor:pointer}
+.pick:hover{border-color:var(--accent)} .pick.on{border-color:var(--accent);background:var(--soft)}
+.pick b{display:block;font-size:16px} .pick span{font-size:14px;color:var(--muted);line-height:1.45;display:block}
+label{display:block;font-size:13.5px;color:var(--muted);margin:0 0 4px}
+select,input,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+button.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:9px;padding:11px 20px;font:inherit;font-weight:650;cursor:pointer}
+button.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 14px;font:inherit;font-size:15px;cursor:pointer}
+button:disabled{opacity:.5}
+.spin{color:var(--muted);font-size:14.5px;margin-left:10px;display:none}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:12px 0}
+details>summary{cursor:pointer;padding:15px 18px;font-weight:650;list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:"+";color:var(--muted);font-size:20px;font-weight:400}
+details[open]>summary::after{content:"\2212"}
+details .in{padding:0 18px 18px}
+.sumsub{display:block;font-weight:400;color:var(--muted);font-size:14.5px;margin-top:1px}
+.answer{background:var(--soft);border-color:transparent}
+.big{font-size:24px;line-height:1.3;font-weight:650;letter-spacing:-.01em;margin:0 0 8px;text-wrap:balance}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+@media(max-width:640px){.tiles{grid-template-columns:1fr}}
+.tile{background:var(--card);border-radius:12px;padding:12px 14px}
+.tile .k{font-size:13.5px;color:var(--muted)} .tile .v{font-size:25px;font-weight:700;letter-spacing:-.02em;line-height:1.2} .tile .n{font-size:13.5px;color:var(--muted)}
+.dec td:first-child{width:38%;font-weight:600} .dec td{padding:10px 6px}
+.myth{margin:14px 0;padding:14px 0;border-top:1px solid var(--line)} .myth:first-of-type{border-top:0}
+.quote{background:var(--chip);border-radius:10px;padding:10px 13px;white-space:pre-wrap;font-size:15.5px;line-height:1.55}
+.steps2{display:grid;gap:12px;margin:14px 0}
+.st{display:grid;grid-template-columns:36px 1fr;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.st .nm{width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700}
+.st p{margin:0 0 6px;font-size:15.5px;line-height:1.55} .st>div{min-width:0}
+.tag-ai{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+dl.gloss dt{font-weight:650;margin-top:10px} dl.gloss dd{margin:0;color:var(--muted);font-size:15.5px}
+.hide{display:none}.err{color:var(--bad)}
+
+.fig{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;margin:12px 0} .fig img{display:block;width:100%;height:auto}
+.mech{border-top:1px solid var(--line);padding-top:18px;margin-top:26px} .mech .q{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+.mech dl{display:grid;grid-template-columns:130px 1fr;gap:8px 14px;margin:10px 0} .mech dt{color:var(--muted);font-size:13px;font-weight:600} .mech dd{margin:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0} .flow div{flex:1 1 130px;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px} .flow b{display:block;font-size:12px;color:var(--accent);margin-bottom:3px}
+@media(max-width:560px){.mech dl{grid-template-columns:1fr;gap:2px}}
+
+.hero{padding:34px 0 8px} .hero h1{font-size:38px;margin:0 0 8px} .stk{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:18px 0}
+.stk .card{margin:0} .stk h3{margin:0 0 6px;font-size:15px} .stk p{margin:0}
+.tour{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:14px 0} .tour button{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;color:var(--ink);font:inherit} .tour button:hover{border-color:var(--accent)} .tour .e{font-size:22px} .tour b{display:block;margin-top:2px} .tour span{color:var(--muted);font-size:14px}
+.taste{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0} .taste>div{flex:1 1 180px;text-align:center;border-radius:12px;padding:16px;border:1px solid var(--line);background:var(--card)} .taste .v{font-size:34px;font-weight:700} .taste .l{color:var(--muted);font-size:14px}
+.vars{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:12px 0} .vars>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px} .vars h4{margin:0 0 6px;font-size:14px} .vars code{font-size:12.5px;background:var(--chip);padding:1px 5px;border-radius:5px} .vars ul{margin:0;padding-left:18px;font-size:14px;color:var(--muted)} .vars li{margin:3px 0}
+#sampleTbl table{width:max-content;min-width:100%;font-size:13px} #sampleTbl td,#sampleTbl th{white-space:nowrap;padding:6px 9px}
+.seg{display:flex;gap:6px;margin:14px 0 0;flex-wrap:wrap} .seg button{font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer} .seg button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rb{margin:34px 0 18px;font-size:13px;color:var(--muted)} .rb a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="nav" role="tablist" aria-label="Sections">
+  <button role="tab" data-tab="start">Start here</button><button role="tab" data-tab="plan">Playground</button><button role="tab" data-tab="proof">Proof</button><button role="tab" data-tab="how">How it works</button>
+</div>
+<div class="seg hide" id="seg"></div>
+
+<!-- ===== START ===== -->
+<div class="tab hide" id="tab-start">
+<section class="hero">
+  <div class="kicker">Start here</div>
+  <h1>Hi, I'm Alokananda 👋</h1>
+  <p class="lead">I built a tool that reads past influencer deals and tells you what worked, what didn't, and why.</p>
+  <div class="note"><b>Quick confession:</b> everything here is made up: the data, the creators, the brands and the sample briefs. I don't have Monk's real deals, so I created 7,500 practice ones and checked that the tool finds the right patterns. It does. Real data is the next step.</div>
+  <div class="stk">
+    <div class="card"><h3>🎯 The problem</h3><p>Brands spend lakhs on creators, and the pick is often a gut call. The evidence is already sitting in past deals. Nobody has read it.</p></div>
+    <div class="card"><h3>⚖️ The promise</h3><p>The data decides. The tool shows its proof, and how sure it is.</p></div>
+    <div class="card"><h3>🧑‍💻 Why me</h3><p>At Hoichoi I was the one-person analytics team. Same idea, new playground.</p></div>
+  </div>
+  <h3>A taste of what it finds</h3>
+  <p class="sub" style="margin-top:0">Spend Rs 100 on a creator. How much comes back?</p>
+  <div class="taste">
+    <div><div class="v good">Rs 184</div><div class="l">from small creators</div></div>
+    <div><div class="v bad">Rs 69</div><div class="l">from celebrity creators</div></div>
+  </div>
+  <p class="sub">Practice data, but that's the kind of thing the tool digs up.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px"><button class="primary" data-go="plan">Try a brief</button><button data-go="findings" style="font:inherit;padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer">See the proof</button></div>
+  <h3 style="margin-top:28px">Where to go</h3>
+  <div class="tour">
+    <button data-go="plan"><span class="e">🎯</span><b>Playground</b><span>Give a brand and a budget, get a plan. Or paste a script and see its fingerprint.</span></button>
+    <button data-go="findings"><span class="e">🔍</span><b>Proof</b><span>Six surprises in the deals, and how sure we are.</span></button>
+    <button data-go="how"><span class="e">🛠️</span><b>How it works</b><span>Showing my working, with charts.</span></button>
+  </div>
+  <details class="card" style="margin-top:22px" open><summary><b>🗂️ Peek at the data</b> <span class="sub">(<span id="dN">7,500</span> rows, <span id="dC">44</span> columns, 10 shown)</span></summary>
+  <p class="sub">One row per sponsored post.</p>
+  <div class="scroll" id="sampleTbl"></div>
+  <details style="margin-top:12px"><summary><b>What each column means</b> (tap to open)</summary>
+  <div class="vars">
+    <div><h4>🧑‍🎤 About the creator</h4><ul><li><code>followers</code> audience size</li><li><code>tier</code> size band: nano, micro, mid, macro, mega</li><li><code>creator_niche</code> their topic</li><li><code>platform</code> Instagram or YouTube</li><li><code>creator_city</code>, <code>creator_language</code></li><li><code>creator_deals_last_30d</code> how booked-up they were</li></ul></div>
+    <div><h4>🛍️ About the deal</h4><ul><li><code>brand</code>, <code>brand_category</code> what is sold</li><li><code>deal_value_inr</code> the fee paid</li><li><code>format</code>, <code>duration_sec</code> reel, video, length</li><li><code>post_day</code>, <code>post_hour</code> when it went live</li><li><code>deal_date</code></li></ul></div>
+    <div><h4>📝 About the script</h4><ul><li><code>script_text</code> the words said</li><li><code>hook_type</code> how it opens: story, question, shock, social proof, challenge, demo, plain introduction</li><li><code>cta_position</code> where the ask comes: start, mid, end</li></ul></div>
+    <div><h4>👀 What people did</h4><ul><li><code>views</code>, <code>likes</code>, <code>comments</code>, <code>saves</code>, <code>shares</code></li><li><code>link_clicks</code> taps on the link</li><li><code>conversions</code> purchases</li><li><code>revenue_inr</code> sales that came back</li></ul></div>
+    <div><h4>🧮 Worked out from the above</h4><ul><li><code>engagement_rate</code> reactions over views</li><li><code>ctr</code> clicks over views</li><li><code>roas</code> revenue over fee (1.0 = break-even, 1.84 = Rs 184 per Rs 100)</li><li><code>cpv</code>, <code>cpe</code>, <code>cost_per_conversion_inr</code> cost per view, reaction, sale</li><li><code>profitable</code> did it beat break-even</li></ul></div>
+  </div></details>
+  </details>
+</section>
+</div>
+
+<!-- ===== FINDINGS ===== -->
+<div class="tab hide" id="tab-findings">
+<section style="padding-top:34px">
+  <span class="badge">practice data, not real deals</span>
+  <h1>What 7,500 influencer deals say</h1>
+  <p class="lead">A data investigation for Monk Entertainment. Every statement here comes from the deals themselves: who was booked, what they said, what it cost, and what came back. No opinions, no rules of thumb.</p>
+  <div class="stats" id="top-stats"></div>
+  <p class="sub"><b>How to read this page.</b> "Return per Rs 100" means the sales that came back for every Rs 100 paid to creators. Rs 100 is break-even. Each finding below has a claim, a chart, and an evidence box that shows how many deals stand behind it and how much the number could move. The Evidence section shows how the work was done.</p>
+  <p class="sub"><b>About the data.</b> Monk's own deals were not available, so the project runs on 7,500 realistic practice deals (700 Indian creators, October 2024 to September 2026). The method is real. The numbers are practice numbers, and the Evidence section says exactly how that limits each claim.</p>
+</section>
+
+<section class="finding">
+  <div class="kicker">Finding 1 &middot; The money</div>
+  <h2 id="f1h"></h2>
+  <p id="f1p"></p>
+  <div class="card" id="f1c"></div>
+</section>
+
+<section class="finding">
+  <div class="kicker">Finding 2 &middot; Timing inside the video</div>
+  <h2 id="f2h"></h2>
+  <p id="f2p"></p>
+  <div class="card" id="f2c"></div>
+</section>
+
+<section class="finding">
+  <div class="kicker">Finding 3 &middot; Fatigue</div>
+  <h2 id="f3h"></h2>
+  <p id="f3p"></p>
+  <div class="card" id="f3c"></div>
+</section>
+
+<section class="finding">
+  <div class="kicker">Finding 4 &middot; Topic fit</div>
+  <h2 id="f4h"></h2>
+  <p id="f4p"></p>
+  <div class="card" id="f4c"></div>
+</section>
+
+<section class="finding">
+  <div class="kicker">Finding 5 &middot; Opening lines</div>
+  <h2 id="f5h"></h2>
+  <p id="f5p"></p>
+  <div class="card" id="f5c"></div>
+</section>
+
+<section class="finding">
+  <div class="kicker">Finding 6 &middot; Things commonly assumed to matter</div>
+  <h2>Five things were tested. One of them moves returns. Four do not.</h2>
+  <p>Each factor below was compared after adjusting for creator size, using each creator once instead of once per deal. Bars can differ a little by chance, especially in small groups. A difference counts as real only when it is very unlikely to be chance (p below 0.01).</p>
+  <div class="card" id="f6c"></div>
+</section>
+
+<section class="finding">
+  <div class="kicker">What it adds up to</div>
+  <h2>Where the evidence points</h2>
+  <div class="card" id="sumup"></div>
+  <div class="picks">
+    <button class="pick" data-tab="plan"><b>What plan does the evidence support?</b><span>Eight sample brand briefs turned into an allocation, with the data behind each choice.</span></button>
+  </div>
+</section>
+</div>
+
+<!-- ===== PLAN ===== -->
+<div class="tab hide" id="tab-plan">
+<section style="padding-top:34px">
+  <div class="kicker">Playground</div>
+  <h1 style="font-size:32px">From evidence to a plan</h1>
+  <p class="lead">A brief is what a brand tells Monk: what they sell, what they can spend, what they want. The plan below is whatever allocation the findings support, with the data behind every choice.</p>
+  <div class="picks" id="picks"></div>
+  <div class="card">
+    <h3>Or change the brief</h3>
+    <div class="form" style="margin-top:10px">
+      <div><label for="brand">Brand name</label><input id="brand" value="Glowvera"></div>
+      <div><label for="cat">What do they sell?</label><select id="cat"></select></div>
+      <div><label for="budget">Budget</label><select id="budget"></select></div>
+      <div><label for="goal">What matters most?</label><select id="goal"><option value="sales">Sales</option><option value="engagement">Likes and comments</option><option value="reach">Reach</option></select></div>
+    </div>
+    <div id="customWrap" class="hide" style="margin-top:12px"><label for="custom">Budget in rupees</label><input id="custom" type="number" min="100000" step="100000" value="2500000"></div>
+    <div style="margin-top:14px"><button class="primary" id="go">Build the plan</button><span class="spin" id="spin">Working it out...</span></div>
+  </div>
+  <div id="out"></div>
+</section>
+</div>
+
+<!-- ===== SCRIPT LAB ===== -->
+<div class="tab hide" id="tab-scripts">
+<section style="padding-top:34px">
+  <div class="kicker">Script Lab</div>
+  <h1 style="font-size:32px">Script lab: text in, data out</h1>
+  <p>Pick a sample script. The reader extracts the fields, and the model shows how deals with that structure have performed for the category.</p>
+  <div class="picks" id="spicks"></div>
+  <div class="card">
+    <div class="form" style="margin-bottom:6px"><div><label for="sbrand">Brand and brief</label><select id="sbrand"></select></div></div>
+    <select id="scat" style="display:none" aria-hidden="true"></select>
+    <p class="sub" id="sbrief" style="margin:0 0 12px"></p>
+    <label for="script">Script text</label>
+    <textarea id="script" placeholder="Pick a sample above, or paste a script here"></textarea>
+    <div style="margin-top:12px"><button class="primary" id="chkgo">Extract and compare</button><span class="spin" id="sspin">Reading...</span></div>
+    <div id="hoWrap" class="hide" style="margin-top:12px"><label for="shook">The reader could not tell how this script opens. Which is closest?</label><select id="shook"></select></div>
+    <div id="chkout"></div>
+  </div>
+  <p class="sub" id="previewNote" style="display:none">In this preview only the six sample scripts can be read. The full app reads any script.</p>
+  <div class="card" id="tagacc"></div>
+</section>
+</div>
+
+<!-- ===== HOW IT WORKS ===== -->
+<div class="tab hide" id="tab-how">
+<section style="padding-top:34px">
+  <div class="kicker">How it works</div>
+  <h1 style="font-size:32px">The mechanism behind every finding</h1>
+  <p class="lead">Each finding on this site comes from a specific calculation. This page shows what was computed, why that method was chosen over a simpler one, and where each method can fail.</p>
+  <h3>The pipeline</h3>
+  <div class="flow">
+    <div><b>1 Data</b>7,500 deals, 700 creators, 2 years, 8 categories</div>
+    <div><b>2 Script to fields</b>Free-text scripts become opening style and ask position</div>
+    <div><b>3 Measure</b>Ratios by creator size, topic, opening, ask timing</div>
+    <div><b>4 Test</b>Resample creators 400 times to get a believable range</div>
+    <div><b>5 Model</b>Predict each deal from its features, then change one at a time</div>
+    <div><b>6 Validate</b>Test on creators the model has never seen</div>
+    <div><b>7 Allocate</b>Turn the evidence into a budget split and a creator list</div>
+  </div>
+  <div class="mech"><div class="q">Foundation</div><h3>The data, and what "practice data" means</h3>
+  <dl>
+    <dt>What it is</dt><dd>One row per sponsored post: date, creator (size, niche, city, language, platform, followers), brand and category, fee, format and length, script, posting day and hour, views, likes, comments, saves, shares, link clicks, conversions, revenue. 700 creators with Indian names, cities and languages. 7,500 deals from October 2024 to September 2026.</dd>
+    <dt>How it was made</dt><dd>Generated by a program in which a few real-world effects were written in on purpose, with noise on top: overbooked creators decay, big creators give worse value, asking mid-video lifts clicks, some openings fit some categories, topic mismatch hurts, evenings get more reach. Language, city, video length and weekday were given no effect.</dd>
+    <dt>Why this is useful</dt><dd>The true answer is known, so the analysis can be graded. Every effect that was planted is recovered, and every effect that was not planted is correctly reported as absent. That shows the pipeline works. It does not show the effect sizes exist in the real market.</dd>
+  </dl></div>
+<div class="mech"><div class="q">Finding 1</div><h3>Money share against return, by creator size</h3><dl><dt>Question</dt><dd>Does the money go where the return is?</dd><dt>Calculation</dt><dd>For each size tier, total revenue divided by total fee (a ratio of sums, so one huge deal cannot dominate the way it would in an average of per-deal ratios), next to that tier's share of all spend. A return of 1.0 on the chart is Rs 100 back for Rs 100 paid.</dd><dt>Why this way</dt><dd>A plain average of per-deal returns would be pulled up by a few lucky deals. Total over total is what a finance team would compute.</dd><dt>Check</dt><dd>Creators are resampled, not deals, because deals from one creator resemble each other. This gives the believable range of the gap between mid-sized and celebrity returns.</dd><dt>Limit</dt><dd>Fee and size move together, so this shows where money went and what came back. It does not prove that size causes the gap.</dd></dl><div class="fig"><img src="/static/img/1_spend_vs_roas_by_tier.png" alt="Money share against return, by creator size"></div><p class="sub">Grey bars: share of spend. Coloured bars: return per rupee. Green is above break-even, red is below.</p></div>
+<div class="mech"><div class="q">Finding 2</div><h3>Where the ask sits in the video</h3><dl><dt>Question</dt><dd>Do clicks and sales change when the call to action comes at the start, middle or end?</dd><dt>Calculation</dt><dd>Video deals only. Median click rate and median return by ask position. The ask position is itself extracted from the script text by the script reader (the AI step).</dd><dt>Check</dt><dd>The model changes only ask position, holding everything else on the deal fixed. Result: returns change a lot, engagement does not, which is what a click-driven effect should look like.</dd><dt>Limit</dt><dd>The effect was planted strongly, and real deals will almost certainly show a smaller one.</dd></dl><div class="fig"><img src="/static/img/4_cta_position.png" alt="Where the ask sits in the video"></div><p class="sub">Median click-through rate by ask position, video deals only. The return comparison is in the Findings tab.</p></div>
+<div class="mech"><div class="q">Finding 3</div><h3>Overbooked creators</h3><dl><dt>Question</dt><dd>Does a creator who has just done many sponsored posts deliver less?</dd><dt>Calculation</dt><dd>For every deal, count how many deals that same creator did in the 30 days before it. Group deals into 0 to 1, 2, 3 and 4 or more, and compare median engagement and return.</dd><dt>Why this way</dt><dd>Counting only prior deals matters. Using the creator's total deal count would just measure popularity.</dd><dt>Check</dt><dd>The model compares 4 recent deals against 1 for an otherwise identical deal. Engagement falls 29 percent and return falls 44 percent. The creator list marks a creator as overbooked when a quarter or more of their deals came with 3+ recent deals.</dd></dl><div class="fig"><img src="/static/img/3_saturation_decay.png" alt="Overbooked creators"></div><p class="sub">Median engagement rate by number of the creator's deals in the prior 30 days.</p></div>
+<div class="mech"><div class="q">Finding 4</div><h3>Topic match</h3><dl><dt>Question</dt><dd>Is a creator's audience less responsive when the brand is outside their usual topic?</dd><dt>Calculation</dt><dd>A deal is a match when the creator's niche equals the brand's category. Compare median engagement for matched and mismatched deals, then repeat inside the model with only that flag changed.</dd><dt>Result</dt><dd>Mismatched deals earn roughly a fifth less engagement.</dd></dl></div>
+<div class="mech"><div class="q">Finding 5</div><h3>Which opening works in which category</h3><dl><dt>Question</dt><dd>Does the way a script opens matter, and does it depend on what is being sold?</dd><dt>Calculation</dt><dd>Each script is tagged with one of seven opening styles. Median engagement for every opening and category pair forms the heatmap. The Playground only calls options "tied" when the model puts them within a few percent of each other, so it does not claim a winner it cannot support.</dd><dt>Limit</dt><dd>Some cells hold few deals. The heatmap shows a pattern, and the model smooths it across categories.</dd></dl><div class="fig"><img src="/static/img/2_hook_heatmap.png" alt="Which opening works in which category"></div><p class="sub">Median engagement by opening style (rows) and brand category (columns). Darker is higher.</p></div>
+<div class="mech"><div class="q">Finding 6</div><h3>Things that did not matter</h3><dl><dt>Question</dt><dd>Do language, city type, video length or weekday explain results?</dd><dt>Calculation</dt><dd>A raw gap can come only from creator size (big creators skew to certain languages and cities, for instance). Each deal is first divided by the typical value for its size and format, giving an index where 1.00 is typical. Then each creator is reduced to a single number and a rank test (Kruskal-Wallis) is run across groups.</dd><dt>Why one number per creator</dt><dd>A creator with 30 deals would otherwise count 30 times and make a tiny gap look significant.</dd><dt>Result</dt><dd>Language, city type, video length and weekday show no difference. Hour of posting does: evening posts return more (p below 0.001), with no engagement change. That one was caught at this stage and the page was corrected.</dd></dl></div>
+
+  <div class="mech"><div class="q">Under the hood</div><h3>The prediction model</h3>
+  <dl>
+    <dt>What it predicts</dt><dd>For one deal, a typical value and an 80% range for engagement rate and for return.</dd>
+    <dt>Method</dt><dd>Gradient-boosted trees fitted three times per outcome, for the 10th, 50th and 90th percentile (quantile regression). Inputs: size tier, followers, niche, platform, brand category, format, length, opening style, ask position, posting day and hour, fee, topic match and recent-deal count.</dd>
+    <dt>Why quantiles</dt><dd>A single predicted number hides how uncertain a sponsored deal is. The range says how often a plan can miss.</dd>
+    <dt>Honest testing</dt><dd>Training and test folds are split by creator, so the model is always scored on creators it has not seen. Splitting by deal would leak each creator's habits into the test and flatter the score.</dd>
+    <dt>Range correction</dt><dd>The raw 10 to 90 range held the true value only about 74% of the time. A conformal correction widened it until held-out coverage reached about 80%.</dd>
+    <dt>Scores</dt><dd>Rank correlation 0.90 for engagement and 0.73 for return. Errors are 31% and 23% smaller than guessing the average. Return is harder to predict, since sales are noisier than likes.</dd>
+  </dl>
+  <div class="fig"><img src="/static/img/7_model_drivers.png" alt="What drives predictions"></div>
+  <p class="sub">What the model leans on. Size and recent-deal count drive engagement. Fee and size drive return. The time of posting carries little weight, which fits a small effect.</p>
+  <div class="fig"><img src="/static/img/8_model_calibration.png" alt="Calibration"></div>
+  <p class="sub">Predicted against actual on held-out creators. Points near the dashed line mean the model is honest. The return model underpredicts at the very top, meaning it is cautious for the best deals.</p>
+  <div class="fig"><img src="/static/img/9_model_whatif.png" alt="What-if effects"></div>
+  <p class="sub">What-if results. One factor is changed while all others stay fixed. This is the "holding other factors equal" column in the scorecard. The hour comparison in this earlier chart showed no engagement change. The later return check found a small positive effect for evening posts (about +9%), which the scorecard reports.</p></div>
+  <div class="mech"><div class="q">From findings to action</div><h3>How a plan is built</h3>
+  <dl>
+    <dt>Step 1: split by size</dt><dd>The model predicts returns for each size tier in the brand's category. Weights are the predicted return squared (for sales), so money leans toward better tiers without putting everything into one. Squaring is a design choice and the page does not claim it is optimal.</dd>
+    <dt>Step 2: caps</dt><dd>Tiny 15%, small 35%, mid-sized 60%, big plus celebrity 25% together (50% for reach goals, where large audiences are cheap per view). Caps stop one tier from absorbing the plan when a model estimate is off.</dd>
+    <dt>Step 3: pick creators</dt><dd>Only creators with a matching niche, 4 or more deals, not overbooked, and (for sales) a return above break-even. Ranked by a score: 60% return rank, 25% consistency, 15% not overbooked. Each creator is booked once.</dd>
+    <dt>Step 4: report the range</dt><dd>The plan's typical return comes with the range for single deals, and is compared with what the same category returned under Monk's past mix.</dd>
+  </dl></div>
+  <div class="mech"><div class="q">The AI step</div><h3>Script reader</h3>
+  <dl>
+    <dt>Purpose</dt><dd>Scripts are text. The reader turns each into two columns: opening style and ask position. After that they are analysed like any other column.</dd>
+    <dt>Two readers</dt><dd>A rule-based reader runs offline. An optional language-model reader (needs an API key) handles messy scripts. Neither has been run on real Monk scripts.</dd>
+    <dt>Accuracy</dt><dd>On templated scripts the rules got 91% of openings and 100% of ask positions right (1,500 scripts). On 24 deliberately messy scripts they got 25% of openings and 88% of ask positions. For openings, the reader says "unclear" and asks the user rather than guessing. That choice matters more than the headline accuracy.</dd>
+  </dl></div>
+  <div class="mech"><div class="q">Self-checks</div><h3>Things caught and corrected while building</h3>
+  <dl>
+    <dt>Posting time</dt><dd>First reported as having no effect. The size-adjusted test showed an effect on returns, so the claim was reversed.</dd>
+    <dt>Allocation caps</dt><dd>Big plus celebrity spend came out near 60% against a 25% cap. The selection step now trims the weakest big creators until the cap holds.</dd>
+    <dt>Model-quality wording</dt><dd>"Ranks deals correctly 90% of the time" was wrong. It was rank correlation. The page now says that.</dd>
+    <dt>Heatmap wording</dt><dd>"Brand introduction is lowest in every column" was too strong, since two columns have exceptions. It now says "at or near the bottom".</dd>
+  </dl></div>
+  <p class="sub" style="margin-top:24px">The code is plain Python: pandas for tables, scipy for tests, scikit-learn for the model, Flask for the page. Nothing here depends on a hosted model, except the optional script reader.</p>
+</section>
+</div>
+
+<!-- ===== EVIDENCE ===== -->
+<div class="tab hide" id="tab-evidence">
+<section style="padding-top:34px">
+  <div class="kicker">Evidence</div>
+  <h1 style="font-size:32px">How sure the data is, and how it was built</h1>
+  <p class="lead">Every finding is listed here with its size, the range it could plausibly fall in, and whether it held up under checks. Things that did not hold up are listed too.</p>
+
+  <h3 style="margin-top:22px">The scorecard</h3>
+  <div class="card scroll" id="scorecard"></div>
+  <p class="sub">Believable range: the span the number moves across when each comparison is repeated 400 times on reshuffled creators. Holding other factors equal: the same comparison made by a prediction model that keeps everything else about the deal fixed.</p>
+
+  <h3 style="margin-top:28px">How the work was done</h3>
+  <div class="steps2">
+    <div class="st"><div class="nm">1</div><div><h3>Collect and clean</h3><p>Every deal becomes one row: date, creator, brand, fee, script, views, likes, comments, clicks, sales. Duplicates and impossible numbers are removed. Nothing else is dropped. 7,500 deals in, 7,500 kept.</p></div></div>
+    <div class="st"><div class="nm">2</div><div><h3>Measure what is normal</h3><p>Return per Rs 100 and engagement are computed for every creator size, category, opening and ask timing, so each deal can be compared with similar deals instead of with the whole pile.</p></div></div>
+    <div class="st"><div class="nm">3</div><div><h3>Test whether a gap is real</h3><p>A gap between two groups can be luck. Each comparison is repeated 400 times on reshuffled data, counting each creator once instead of once per deal, because several deals from one creator are not independent.</p></div></div>
+    <div class="st"><div class="nm">4</div><div><h3>Separate causes from bystanders</h3><p>Big creators also tend to ask late and be booked often, so raw gaps can mislead. A prediction model changes one thing at a time, such as ask timing, and keeps everything else fixed. That produces the "holding other factors equal" column.</p></div></div>
+    <div class="st"><div class="nm">5</div><div><h3>Check the model on strangers</h3><p>The model was tested on creators it had never seen. Its ranking of deals from best to worst matches reality closely (rank correlation <span id="m-eng"></span> for engagement, <span id="m-roas"></span> for returns). Its errors are <span id="m-skE"></span> smaller than guessing the average for engagement and <span id="m-skR"></span> smaller for returns. The ranges it gives were calibrated until the 80% range held the true value about 80% of the time on unseen creators.</p></div></div>
+    <div class="st"><div class="nm">6</div><div><h3>Turn scripts into data <span class="tag-ai">the AI step</span></h3><p>Scripts are free text, so a reader (rules offline, or a language model with an API key) extracts two fields from each: how the script opens and when the ask comes. Those fields join the table and are analysed like any other column. This is the only place AI is used. Everything else is statistics. See "Check a script" in the Playground.</p></div></div>
+  </div>
+
+  <h3 style="margin-top:28px">Limits, stated plainly</h3>
+  <div class="card">
+    <p><b>Practice data.</b> The 7,500 deals were generated with realistic patterns built in. The method recovering those patterns shows the pipeline works. It does not show that the same effect sizes exist in the market, and the ask-timing effect in particular was built strongly.</p>
+    <p><b>Association and cause.</b> Holding other factors equal narrows the gap between "goes with" and "causes", but only a controlled test, such as alternating ask timing across similar creators, would settle it.</p>
+    <p><b>Wide outcomes.</b> Individual deals vary a lot. A typical result and an 80% range are reported, and about 1 deal in 5 lands outside the range.</p>
+    <p style="margin:0"><b>What would change the conclusions.</b> Each finding gets re-run on Monk's real deals. A finding stays when its believable range excludes zero on the real data. A finding that disappears is reported as disappeared.</p>
+  </div>
+
+  <h3 style="margin-top:28px">What Monk would need to share</h3>
+  <div class="card scroll"><table>
+    <tr><th>Column</th><th>Used for</th></tr>
+    <tr><td>Deal date</td><td>Measuring how booked-up a creator was at the time.</td></tr>
+    <tr><td>Creator, size, niche, city, language</td><td>Who was booked, and whether their topic matched the brand.</td></tr>
+    <tr><td>Brand and category</td><td>Comparing like with like.</td></tr>
+    <tr><td>Fee paid</td><td>The cost side of every comparison.</td></tr>
+    <tr><td>Script or opening line, and when the ask came</td><td>The creative choices the analysis studies.</td></tr>
+    <tr><td>Views, likes, comments, saves, shares</td><td>How people reacted.</td></tr>
+    <tr><td>Link clicks, sales, revenue</td><td>What came back. The most important columns.</td></tr>
+  </table></div>
+
+  <h3 style="margin-top:28px">Glossary</h3>
+  <dl class="gloss">
+    <dt>Return per Rs 100 (ROAS)</dt><dd>Sales that came back for every Rs 100 paid to creators. Above 100 makes money.</dd>
+    <dt>Engagement rate</dt><dd>Likes, comments, saves and shares as a share of views.</dd>
+    <dt>Opening line (hook)</dt><dd>The first sentence of the video.</dd>
+    <dt>The ask (call to action)</dt><dd>The moment a creator says "use my code" or "link in bio".</dd>
+    <dt>Overbooked</dt><dd>A creator with 3 or more brand deals in the previous 30 days.</dd>
+    <dt>Believable range</dt><dd>The span a number could realistically fall in if the data had been a little different.</dd>
+    <dt>p-value</dt><dd>How likely a gap this size is to appear by chance if there were no real difference. Below 0.01 is treated as real here.</dd>
+    <dt>Creator size</dt><dd>Tiny is under about 10k followers, small up to 50k, mid-sized up to 250k, big up to 1M, celebrity above that.</dd>
+  </dl>
+</section>
+</div>
+
+<p class="rb" id="rb" style="display:none"><a href="/classic">Previous layout (7 tabs)</a></p>
+</div>
+
+<script>
+const PREVIEW = false; /*PREVIEW_FLAG*/
+const $ = s => document.querySelector(s), esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const inr = x => x >= 1e7 ? `Rs ${(x/1e7).toFixed(2)} crore` : x >= 1e5 ? `Rs ${(x/1e5).toFixed(1)} lakh` : `Rs ${Math.round(x).toLocaleString('en-IN')}`;
+const pct = x => `${Math.round(x*100)}%`;
+const pct1 = x => `${(x*100).toFixed(1)}%`;
+const num = x => Math.round(x).toLocaleString('en-IN');
+const per100 = r => `Rs ${Math.round(r*100)}`;
+const sgn = x => `${x >= 0 ? '+' : '-'}${Math.round(Math.abs(x)*100)}%`;
+const cap = s => s[0].toUpperCase() + s.slice(1);
+const SIZE = {nano:'tiny', micro:'small', mid:'mid-sized', macro:'big', mega:'celebrity'};
+const SIZE_SHORT = {nano:'Tiny', micro:'Small', mid:'Mid-sized', macro:'Big', mega:'Celebrity'};
+const HOOK = {story:'a personal story', question:'a question', shock:'a surprise', social_proof:'"everyone is using it"', challenge:'a try-it-for-days challenge', demo:'a demo', direct_pitch:'a plain brand introduction'};
+const CTA = {start:'at the beginning', mid:'in the middle', end:'at the end', none:'missing'};
+const STARTERS = {story:'Last month I almost gave up on {c}, and then {b} changed that.', question:'Is {b} actually worth your money? I tested it for two weeks.', shock:'I did not expect {b} to work this well.',
+  social_proof:'Everyone in my DMs keeps asking about {b}, so here it is.', challenge:'I used only {b} for seven days. Here is what happened.', demo:'Let me show you exactly how I use {b} every day.'};
+
+const BRIEFS = [
+  {id:'b1', brand:'Glowvera', cat:'beauty', budget:1500000, goal:'sales', tag:'Skincare brand, sales goal', note:'Rs 15 lakh. Money is left unspent.'},
+  {id:'b2', brand:'Pixelon', cat:'tech', budget:5000000, goal:'engagement', tag:'Gadget brand, engagement goal', note:'Rs 50 lakh. The goal changes the split.'},
+  {id:'b3', brand:'Threadhaus', cat:'fashion', budget:500000, goal:'reach', tag:'Clothing label, reach goal', note:'Rs 5 lakh. A lean plan.'},
+  {id:'b4', brand:'FitFuel', cat:'fitness', budget:20000000, goal:'sales', tag:'Protein brand, big budget', note:'Rs 2 crore. A big budget does not buy big names.'},
+  {id:'b5', brand:'Brewtale', cat:'food', budget:1500000, goal:'engagement', tag:'Coffee brand, engagement goal', note:'Rs 15 lakh.'},
+  {id:'b6', brand:'Wanderly', cat:'travel', budget:500000, goal:'reach', tag:'Travel app, reach goal', note:'Rs 5 lakh.'},
+  {id:'b7', brand:'Pixelplay', cat:'gaming', budget:5000000, goal:'sales', tag:'Gaming accessories, sales goal', note:'Rs 50 lakh. Where big names lose most.'},
+  {id:'b8', brand:'Homeyard', cat:'lifestyle', budget:20000000, goal:'reach', tag:'Home brand, festive push', note:'Rs 2 crore. Reach allows more big names.'}];
+const SCRIPTS = [
+  {id:'intro', cat:'beauty', name:'Opens by introducing the brand', note:'A common first draft.',
+   text:'Hello everyone, today I want to tell you about the new Glowvera serum. It has niacinamide and hyaluronic acid. It is great for daily use. Link in bio.'},
+  {id:'story', cat:'beauty', name:'Story, ask in the middle', note:'Personal story, then the ask early.',
+   text:'Last month my skin was so bad that I cancelled a shoot. A friend told me about the Glowvera serum. Use code GLOW10 if you want to try it. Two weeks later I keep getting compliments, and my skin has never felt softer.'},
+  {id:'question', cat:'beauty', name:'Question opening, ask last', note:'A strong opening with the ask at the end.',
+   text:'Is the Glowvera serum actually worth 899 rupees? I used it every day for two weeks and tracked what happened. My skin got clearer and softer. Link in bio if you want to try it.'},
+  {id:'challenge', cat:'fitness', name:'Seven-day challenge, ask in the middle', note:'Try-it-for-days opening.',
+   text:'I only used Glowvera protein for seven days, nothing else. Day one was rough. Use code FIT10 if you want to join me. By day seven my workouts felt completely different.'},
+  {id:'demo', cat:'tech', name:'Demo, ask at the very start', note:'The ask comes before any interest builds.',
+   text:'Use code TECH10 for the Glowvera earbuds. Let me show you how to pair them in ten seconds. First open the case, then hold the button. That is it.'},
+  {id:'messy', cat:'beauty', name:'Casual Hinglish', note:'The reader cannot tell how it opens, and says so.',
+   text:'Bhai ek baat bolu, mujhe ye serum kaafi pasand aaya. Dekh lo agar chahiye toh. Glowvera ka hai. Link bio mein hai.'}];
+const BUDGETS = [[500000,'Rs 5 lakh'],[1500000,'Rs 15 lakh'],[5000000,'Rs 50 lakh'],[20000000,'Rs 2 crore']];
+
+/*API_START*/
+async function api(u, b) { const r = await fetch(u, b ? {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(b)} : undefined); return r.json(); }
+/*API_END*/
+
+/* ---------- chart helpers ---------- */
+function bars(rows) {   // value = return per Rs 100, break-even line at 100
+  const mx = Math.max(...rows.map(r => r.value), 100);
+  return `<div class="bars">${rows.map(r => `<div class="r"><span>${r.label}</span><span class="t"><i class="${r.value>=100?'gi':'bi'}" style="width:${Math.min(100,r.value/mx*100)}%"></i><u style="left:${100/mx*100}%"></u></span><b class="${r.value>=100?'good':'bad'}">${per100(r.value/100)}</b></div>`).join('')}</div>`;
+}
+function pairBars(rows) { // share of spend vs return
+  const mx = Math.max(...rows.map(r => r.ret), 100);
+  return `<div class="pair"><div class="h"><span></span><span>Share of all money</span><span>Return per Rs 100</span></div>${rows.map(r => `<div class="r"><span>${r.label}</span>
+    <div class="c"><span class="t"><i class="mi" style="width:${r.share*100}%"></i></span><b>${pct(r.share)}</b></div>
+    <div class="c"><span class="t"><i class="${r.ret>=100?'gi':'bi'}" style="width:${Math.min(100,r.ret/mx*100)}%"></i><u style="left:${100/mx*100}%"></u></span><b class="${r.ret>=100?'good':'bad'}">Rs ${Math.round(r.ret)}</b></div></div>`).join('')}</div>`;
+}
+const ev = (items, title='Evidence') => `<div class="ev"><b class="l">${title}</b><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
+const rng = (o, f=pct) => `${f(o.lo)} to ${f(o.hi)}`;
+let META = null, BENCH = null, EVID = null, LAST_TEXT = '';
+
+/* ---------- FINDINGS ---------- */
+function renderFindings() {
+  const B = BENCH, h = B.headline, T = B.tiers, E = EVID, R = E.robustness, W = E.whatif, F = E.facts;
+  const cta = Object.fromEntries(B.cta.map(c => [c.cta_position, c])), sat = B.saturation;
+  const tier = k => T.find(t => t.tier === k), mid = tier('mid');
+  $('#top-stats').innerHTML = [['Deals analysed', num(h.deals), `${h.start.slice(0,7)} to ${h.end.slice(0,7)}`], ['Creator spend', inr(h.spend), '700 creators'], ['Overall return', per100(h.roas), 'per Rs 100 spent'], ['Deals below break-even', pct(h.pct_losing), 'returned under Rs 100']]
+    .map(([k,v,n]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join('');
+
+  $('#f1h').textContent = `${pct(h.big_share)} of the money went to the creator sizes that returned the least`;
+  $('#f1p').innerHTML = `Big and celebrity creators took ${pct(h.big_share)} of all spend. Together they returned <b class="bad">${per100(h.big_roas)}</b> per Rs 100, below break-even. Mid-sized creators returned <b class="good">${per100(mid.roas)}</b>.`;
+  $('#f1c').innerHTML = pairBars(T.map(t => ({label: SIZE_SHORT[t.tier], share: t.spend_share, ret: t.roas*100}))) +
+    ev([`${num(h.deals)} deals across 700 creators. Mid-sized: ${num(mid.deals)} deals. Big: ${num(tier('macro').deals)}. Celebrity: ${num(tier('mega').deals)}.`,
+        `The gap between mid-sized and big-plus-celebrity is Rs ${Math.round(R.tier_roas_gap.point*100)} per Rs 100 (believable range Rs ${Math.round(R.tier_roas_gap.lo*100)} to Rs ${Math.round(R.tier_roas_gap.hi*100)}).`,
+        `${pct(tier('mega').pct_profitable)} of celebrity deals broke even or better, against ${pct(mid.pct_profitable)} of mid-sized deals.`,
+        `Tiny and small creators also returned above Rs 100, but account for only ${pct(tier('nano').spend_share + tier('micro').spend_share)} of the money.`]);
+
+  $('#f2h').textContent = `A deal's return depends heavily on when in the video the ask arrives`;
+  $('#f2p').innerHTML = `When the creator made the ask in the middle of the video, a typical deal returned <b class="good">${per100(cta.mid.roas)}</b> per Rs 100. When the ask came at the end, it returned <b class="bad">${per100(cta.end.roas)}</b>. Half of all deals put the ask at the end.`;
+  $('#f2c').innerHTML = bars([['start','Ask at the beginning'],['mid','Ask in the middle'],['end','Ask at the end']].map(([k,l]) => ({label:l, value: cta[k].roas*100}))) +
+    ev([`Middle: ${num(F.n_mid)} deals. End: ${num(F.n_end)} deals. Beginning: ${num(cta.start.deals)} deals. Video deals only.`,
+        `Click-through rate was ${pct(R.cta_mid_vs_end_lift.point)} higher in the middle than at the end (believable range ${rng(R.cta_mid_vs_end_lift)}).`,
+        `Of viewers who clicked, ${pct1(F.c2c_mid)} bought when the ask was in the middle and ${pct1(F.c2c_end)} when it was at the end.`,
+        `Holding other factors equal, the model puts the return gap at about ${pct(W.roas_cta_mid_vs_end)} and the engagement gap at ${pct1(Math.abs(W.engagement_rate_cta_mid_vs_end))}. Timing moves clicks and sales, not likes.`,
+        `<b>Caution:</b> this effect was built strongly into the practice data. On real deals the direction would be expected to hold and the size to shrink.`]);
+
+  $('#f3h').textContent = `Creators booked heavily in the previous month deliver less`;
+  $('#f3p').innerHTML = `When a creator had 4 or more other brand deals in the previous 30 days, a typical deal returned <b class="bad">${per100(sat[3].roas)}</b> per Rs 100. A creator with at most one other deal returned <b class="good">${per100(sat[0].roas)}</b>.`;
+  $('#f3c').innerHTML = bars(sat.map(s => ({label: s.b === '0-1' ? '0 to 1 other deals' : s.b + ' other deals', value: s.roas*100}))) +
+    ev([`${num(F.n_sat)} deals (${pct(F.pct_sat)} of all) happened while the creator had 3 or more other deals that month. They account for ${inr(F.spend_sat)} of spend.`,
+        `Median engagement fell from ${pct1(0.0353)} to ${pct1(0.0212)} in those deals, a ${pct(R.saturation_drop.point)} drop (believable range ${rng(R.saturation_drop)}). Adjusting for creator size leaves it at 39%.`,
+        `Holding other factors equal, going from 1 to 4 recent deals lowers engagement by ${pct(Math.abs(W.eng_saturation_4_vs_1))} and returns by ${pct(Math.abs(W.roas_saturation_4_vs_1))}.`]);
+
+  $('#f4h').textContent = `Creators outside the brand's category earn about a fifth less engagement`;
+  $('#f4p').innerHTML = `Median engagement was <b class="good">${pct1(F.match_eng)}</b> when the creator's topic matched the brand's category and <b class="bad">${pct1(F.mismatch_eng)}</b> when it did not. ${pct(F.mismatch_share)} of deals were mismatches.`;
+  $('#f4c').innerHTML = `<div class="bars"><div class="r"><span>Topic matched</span><span class="t"><i class="ai" style="width:100%"></i></span><b>${pct1(F.match_eng)}</b></div><div class="r"><span>Topic mismatched</span><span class="t"><i class="mi" style="width:${F.mismatch_eng/F.match_eng*100}%"></i></span><b>${pct1(F.mismatch_eng)}</b></div></div><div class="sub">Median engagement rate.</div>` +
+    ev([`${num(Math.round(h.deals*F.mismatch_share))} mismatched deals against ${num(Math.round(h.deals*(1-F.mismatch_share)))} matched ones.`,
+        `The gap is ${pct(R.mismatch_drop.point)} (believable range ${rng(R.mismatch_drop)}).`,
+        `Holding other factors equal, the model puts the mismatch penalty at ${pct(Math.abs(W.eng_mismatch_vs_match))}.`]);
+
+  $('#f5h').textContent = `Most opening lines perform alike. A plain brand introduction does worse.`;
+  const heat = B.heat, vals = heat.values.flat().filter(v => v != null), lo = Math.min(...vals), hi = Math.max(...vals);
+  const HN = {story:'Story', question:'Question', shock:'Surprise', social_proof:'Everyone uses it', challenge:'Challenge', demo:'Demo', direct_pitch:'Brand introduction'};
+  $('#f5p').innerHTML = `The chart shows median engagement for each opening in each category. The bottom row, a plain brand introduction ("today I want to tell you about..."), sits at or near the bottom in every column. The other six openings trade the lead from category to category.`;
+  $('#f5c').innerHTML = `<div class="scroll"><table class="heat"><tr><th></th>${heat.cols.map(c => `<th>${cap(c)}</th>`).join('')}</tr>` +
+    heat.rows.map((r, i) => `<tr><td class="h">${HN[r]}</td>${heat.values[i].map(v => `<td style="background:color-mix(in srgb, var(--accent) ${v==null?0:Math.round((v-lo)/(hi-lo||1)*55)}%, transparent)">${v==null?'':pct1(v)}</td>`).join('')}</tr>`).join('') + `</table></div>` +
+    ev([`Brand-introduction openings did ${pct(R.direct_pitch_gap.point)} worse than all other openings (believable range ${rng(R.direct_pitch_gap)}).`,
+        `Holding other factors equal, a story opening beats a brand introduction by ${pct(W.eng_story_vs_direct)} on engagement and ${pct(W.roas_story_vs_direct)} on returns.`,
+        `Each cell holds roughly 100 to 200 deals, so small differences between the other six openings sit inside the noise. The leading opening per category (${E.hooks_by_cat.map(x => `${x.category}: ${HN[x.best_hook].toLowerCase()}`).join('; ')}) leads by a few tenths of a percentage point.`]);
+
+  const verdict = m => { const e = m.p_eng < 0.01, r = m.p_roas < 0.01; return e && r ? ['p-yes','Engagement and returns differ'] : r ? ['p-yes','Returns differ'] : e ? ['p-yes','Engagement differs'] : ['p-no','No measurable difference']; };
+  $('#f6c').innerHTML = E.myths.map(m => {
+    const [cls, txt] = verdict(m), mx = Math.max(...m.groups.map(g => g.roas_idx), 1.2);
+    return `<div class="myth"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><b>${m.title}</b><span class="pill ${cls}">${txt}</span></div>
+      <div class="bars">${m.groups.map(g => `<div class="r"><span>${esc(g.name)}</span><span class="t"><i class="ai" style="width:${g.roas_idx/mx*100}%"></i><u style="left:${1/mx*100}%"></u></span><b>${g.roas_idx.toFixed(2)}</b></div>`).join('')}</div>
+      <div class="sub">Return index: 1.00 is typical for that creator size and format. Tested on ${num(m.creators)} creators. p = ${m.p_eng < 0.001 ? '<0.001' : m.p_eng.toFixed(2)} for engagement, ${m.p_roas < 0.001 ? '<0.001' : m.p_roas.toFixed(2)} for returns.</div></div>`; }).join('') +
+    `<div class="note">The one factor that moved returns is time of posting. Evening posts (roughly 5 to 10 pm) returned about ${pct(E.hour_raw)} more than other hours in the raw data, and about ${pct(E.hour_whatif.roas)} more holding other factors equal. Engagement did not change (${pct1(Math.abs(E.hour_whatif.eng))}), so the extra return comes from more people seeing the video. Language, city type, video length and weekday against weekend showed nothing beyond chance.</div>`;
+
+  $('#sumup').innerHTML = `<p><b>Where returns concentrate.</b> Mid-sized creators, in the brand's own category, not overbooked, asking in the middle of the video, posting in the evening, with any opening other than a plain brand introduction.</p>
+    <p><b>Where money went instead.</b> ${pct(h.big_share)} of spend went to big and celebrity creators at ${per100(h.big_roas)} per Rs 100, and ${pct(F.pct_sat)} of deals happened with overbooked creators.</p>
+    <p style="margin:0"><b>What the data does not support.</b> Differences by language, by city type, by video length, or by weekday against weekend. Rankings among the six non-introduction openings.</p>`;
+}
+
+/* ---------- PLAN ---------- */
+function setBrief(b) {
+  $('#brand').value = b.brand; $('#cat').value = b.cat; $('#goal').value = b.goal; $('#budget').value = String(b.budget); $('#customWrap').classList.add('hide');
+  document.querySelectorAll('#picks .pick').forEach(x => x.classList.toggle('on', x.dataset.id === b.id));
+}
+const currentBudget = () => $('#budget').value === 'other' ? +$('#custom').value : +$('#budget').value;
+async function run() {
+  $('#go').disabled = true; $('#spin').style.display = 'inline';
+  const cat = $('#cat').value, brand = $('#brand').value || 'the brand', goal = $('#goal').value;
+  const [d, pb] = await Promise.all([api('/api/pitch', {brand, category: cat, budget_inr: currentBudget(), goal, format: 'reel'}), api(`/api/playbook?tier=mid&category=${cat}&format=reel`)]);
+  $('#go').disabled = false; $('#spin').style.display = 'none';
+  const out = $('#out');
+  if (d.error) { out.innerHTML = `<div class="card err">${esc(d.error)}</div>`; return; }
+  const T = BENCH.tiers, tr = k => T.find(t => t.tier === k), cta = Object.fromEntries(BENCH.cta.map(c => [c.cta_position, c])), sat = BENCH.saturation, E = EVID;
+  const tiers = ['nano','micro','mid','macro','mega'].filter(t => d.shares[t] > 0);
+  const top = tiers.slice().sort((a,b) => d.shares[b]-d.shares[a])[0];
+  const planned = d.total_spent, leftover = d.unallocated, total = planned + leftover, back = d.rec_roas_p50, usual = d.hist_mix_roas_p50, bigCap = d.caps.macro + d.caps.mega;
+  const dp = pb.plays.find(p => p.hook === 'direct_pitch' && p.cta === 'mid');
+  const nBy = t => d.creators.filter(c => c.tier === t).length, spendBy = t => d.creators.filter(c => c.tier === t).reduce((a,c) => a + c.fee, 0);
+  const lowR = Math.min(...tiers.map(t => d.per_tier[t].roas.p10)), highR = Math.max(...tiers.map(t => d.per_tier[t].roas.p90));
+  const sizeEv = ['micro','mid','macro','mega'].map(k => `${SIZE[k]} ${per100(tr(k).roas)} (${num(tr(k).deals)} deals)`).join(', ');
+  const rows = [
+    [`${pct(d.shares[top])} on ${SIZE[top]} creators; ${pct(bigCap)} or less on big and celebrity`, goal === 'reach' ? `For reach, bigger names are cheaper per view, so the cap is raised to ${pct(bigCap)}. Across all past deals, return per Rs 100 was: ${sizeEv}.` : `Return per Rs 100 across all past deals: ${sizeEv}.`],
+    [`${d.creators.length} named creators`, `${num(d.n_candidates)} ${cat} creators pass the filters: matching topic, 4+ past deals, above break-even, not overbooked. Matched-topic deals earn about ${pct(Math.abs(E.whatif.eng_mismatch_vs_match))} more engagement than mismatched ones.`],
+    ['Ask in the middle of the video', `Middle-ask deals returned ${per100(cta.mid.roas)} per Rs 100 (${num(E.facts.n_mid)} deals). End-ask deals returned ${per100(cta.end.roas)} (${num(E.facts.n_end)} deals).`],
+    [`Open with ${pb.plays.filter(p => p.near_tie_with_top).slice(0,3).map(p => HOOK[p.hook]).join(', ')}`, `These are within a few percent of each other in the model. A plain brand introduction is predicted ${dp ? pct(Math.abs(dp.roas_vs_top)) : 'lower'} below the top option for ${cat}.`],
+    ['Post in the evening', `Evening posts returned about ${pct(E.hour_whatif.roas)} more holding other factors equal, with no change in engagement.`],
+    ['One booking per creator; none with 3+ deals in the last month', `Creators with 4+ other deals the previous month returned ${per100(sat[3].roas)} per Rs 100, against ${per100(sat[0].roas)} with 0 to 1.`]];
+  LAST_TEXT = `${brand} (${cat}), ${inr(total)}, goal: ${goal}\nAllocation: ${inr(planned)} across ${d.creators.length} creators. ${tiers.map(t => `${SIZE[t]} ${pct(d.shares[t])}`).join(', ')}.\nExpected return: about ${per100(back)} per Rs 100 (single deals between ${per100(lowR)} and ${per100(highR)}). Historical mix for ${cat}: ${per100(usual)}.\n\nWhat the plan contains and the data behind it:\n` + rows.map(r => `- ${r[0]}: ${r[1]}`).join('\n') + `\n\nSource: 7,500 practice deals. Figures are model estimates.`;
+  out.innerHTML = `
+  <p style="margin-top:22px">What the evidence supports for <b>${esc(brand)}</b>:</p>
+  <div class="card answer">
+    <p class="big">${inr(planned)} across ${d.creators.length} creators, ${d.shares[top] >= 0.5 ? 'mostly' : 'led by'} ${SIZE[top]} ones. Typical return: ${per100(back)} per Rs 100.</p>
+    <div class="sub">The same category, allocated the way Monk's past deals were, returned about ${per100(usual)}. Single deals under this plan typically land between ${per100(lowR)} and ${per100(highR)}.</div>
+    <div class="tiles">
+      <div class="tile"><div class="k">Money allocated</div><div class="v">${inr(planned)}</div><div class="n">of ${inr(total)}</div></div>
+      <div class="tile"><div class="k">Creators</div><div class="v">${d.creators.length}</div><div class="n">${num(d.n_candidates)} passed the filters</div></div>
+      <div class="tile"><div class="k">Typical money back</div><div class="v">${inr(planned*back)}</div><div class="n">median case, not a promise</div></div>
+    </div>
+    ${leftover > total*0.03 ? `<div class="note"><b>${inr(leftover)} is left unallocated.</b> Only ${num(d.n_candidates)} ${esc(cat)} creators pass the filters, each is used once, and the size limits stop the remainder going to sizes that return less. The data does not support spending it.</div>` : ''}
+    ${goal === 'reach' ? '<div class="note">This plan optimises for views per rupee, which favours bigger names. The return figure above already reflects the lower sales they bring.</div>' : ''}
+    <div style="margin-top:14px"><button class="ghost" id="cpTxt">Copy this plan as text</button> <span class="sub" id="cpNote"></span></div>
+  </div>
+  <h3 style="margin-top:22px">Each choice and the data behind it</h3>
+  <div class="card scroll"><table class="dec"><tr><th>What the plan contains</th><th>What the data shows</th></tr>${rows.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table></div>
+  <details><summary><span>Split by creator size<span class="sumsub">Where the allocated money goes and what each size has returned</span></span></summary><div class="in"><div class="scroll"><table>
+    <tr><th>Size</th><th class="n">Share</th><th class="n">Creators</th><th class="n">Money</th><th class="n">Model return per Rs 100</th></tr>
+    ${tiers.map(t => `<tr><td>${SIZE_SHORT[t]}</td><td class="n">${pct(d.shares[t])}</td><td class="n">${nBy(t)}</td><td class="n">${inr(spendBy(t))}</td><td class="n">${per100(d.per_tier[t].roas.p50)}</td></tr>`).join('')}</table></div></div></details>
+  <details><summary><span>The ${d.creators.length} creators and their records<span class="sumsub">Past return and number of deals behind each</span></span></summary><div class="in"><div class="scroll"><table>
+    <tr><th>Creator</th><th>Size</th><th>City</th><th class="n">Past return per Rs 100</th><th class="n">Past deals</th><th class="n">Usual fee</th></tr>
+    ${[...d.creators].sort((a,b) => tiers.indexOf(a.tier)-tiers.indexOf(b.tier) || b.past_roas-a.past_roas).map(c => `<tr><td>${esc(c.creator)} <span class="sub">${esc(c.handle)}</span></td><td>${SIZE_SHORT[c.tier]}</td><td>${esc(c.city)}</td><td class="n ${c.past_roas>=1?'good':'bad'}">${per100(c.past_roas)}</td><td class="n">${c.past_deals}</td><td class="n">${inr(c.fee)}</td></tr>`).join('')}</table></div></div></details>
+  <details><summary><span>Example opening lines<span class="sumsub">Templates for the near-tied openings. A creator would keep a claim only if it is true for them.</span></span></summary><div class="in">
+    ${d.hooks.map(h => `<div style="padding:8px 0"><b>${cap(HOOK[h])}</b><div class="quote" style="margin-top:6px">${esc((STARTERS[h] || '').replace('{b}', brand).replace('{c}', cat))}</div></div>`).join('')}</div></details>`;
+  $('#cpTxt').onclick = async () => { try { await navigator.clipboard.writeText(LAST_TEXT); $('#cpNote').textContent = 'Copied.'; } catch (e) { $('#cpNote').textContent = 'Copy was blocked.'; } };
+}
+
+/* ---------- EVIDENCE ---------- */
+function renderEvidence() {
+  const E = EVID, R = E.robustness, W = E.whatif, M = E.model.metrics;
+  const rowsE = [
+    ['Mid-sized vs big and celebrity creators', `Rs ${Math.round(R.tier_roas_gap.point*100)} more per Rs 100`, `Rs ${Math.round(R.tier_roas_gap.lo*100)} to Rs ${Math.round(R.tier_roas_gap.hi*100)}`, 'Not isolated, since fees and creator type overlap', 'p-yes', 'Supported'],
+    ['Ask in the middle vs at the end', `${pct(R.cta_mid_vs_end_lift.point)} more clicks`, rng(R.cta_mid_vs_end_lift), `Returns ${sgn(W.roas_cta_mid_vs_end)}, engagement unchanged`, 'p-yes', 'Supported (size likely smaller on real deals)'],
+    ['Overbooked creators', `${pct(R.saturation_drop.point)} less engagement`, rng(R.saturation_drop), `1 to 4 recent deals: engagement ${sgn(W.eng_saturation_4_vs_1)}, returns ${sgn(W.roas_saturation_4_vs_1)}`, 'p-yes', 'Supported'],
+    ['Topic mismatch', `${pct(R.mismatch_drop.point)} less engagement`, rng(R.mismatch_drop), `Engagement ${sgn(W.eng_mismatch_vs_match)}`, 'p-yes', 'Supported'],
+    ['Plain brand introduction as opening', `${pct(R.direct_pitch_gap.point)} lower`, rng(R.direct_pitch_gap), `Story vs introduction: engagement ${sgn(W.eng_story_vs_direct)}, returns ${sgn(W.roas_story_vs_direct)}`, 'p-yes', 'Supported'],
+    ['Evening posting', `${sgn(E.hour_raw)} returns (raw)`, 'p < 0.001', `Returns ${sgn(E.hour_whatif.roas)}, engagement ${sgn(E.hour_whatif.eng)}`, 'p-mid', 'Supported for returns only']];
+  E.myths.filter(m => m.title !== 'Time of posting').forEach(m => rowsE.push([m.title, 'No difference after adjusting for creator size', `p = ${m.p_eng.toFixed(2)} (engagement), ${m.p_roas.toFixed(2)} (returns)`, '-', 'p-no', 'Not supported']));
+  $('#scorecard').innerHTML = `<table><tr><th>Question</th><th>What was measured</th><th>Believable range</th><th>Holding other factors equal</th><th>Verdict</th></tr>` +
+    rowsE.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><span class="pill ${r[4]}">${r[5]}</span></td></tr>`).join('') + `</table>`;
+  $('#m-eng').textContent = M.engagement_rate.spearman.toFixed(2); $('#m-roas').textContent = M.roas.spearman.toFixed(2);
+  $('#m-skE').textContent = pct(M.engagement_rate.skill_vs_baseline); $('#m-skR').textContent = pct(M.roas.skill_vs_baseline);
+  const t = E.tagger;
+  $('#tagacc').innerHTML = `<h3>How accurate is the script reader?</h3>
+    <div class="scroll"><table><tr><th>Test</th><th class="n">Scripts</th><th class="n">Opening right</th><th class="n">Ask position right</th></tr>
+    <tr><td>Practice scripts from the generator (templated, so this checks the code runs)</td><td class="n">${num(t.sim_n)}</td><td class="n">${pct(t.sim_hook_acc)}</td><td class="n">${pct(t.sim_cta_acc)}</td></tr>
+    <tr><td>Hand-written messy scripts in mixed English and Hinglish</td><td class="n">${t.hard_n}</td><td class="n">${pct(t.hard_hook_acc)}</td><td class="n">${pct(t.hard_cta_acc)}</td></tr></table></div>
+    <p class="sub" style="margin:10px 0 0">On the messy set, the offline reader flagged ${t.hard_unclear} of ${t.hard_n} as unclear instead of guessing, and was confidently wrong on ${t.hard_confidently_wrong}. A language-model reader is built for this case but has not yet been tested on real scripts. On real data it would be checked against a hand-labelled sample before its output is used in any finding.</p>`;
+}
+
+/* script lab */
+let ACTIVE_SCRIPT = null;
+const GOAL_LABEL = {sales:'sales', engagement:'likes and comments', reach:'reach'};
+let SCRIPT_BASE = null;   // the preset the textarea currently shows, so a brand change can re-word it
+const curBrief = () => BRIEFS.find(b => b.id === $('#sbrand').value) || BRIEFS[0];
+function showBrief() {
+  const b = curBrief(); $('#scat').value = b.cat;
+  $('#sbrief').innerHTML = `Brief: <b>${esc(b.brand)}</b> sells ${esc(b.cat)} products, wants <b>${GOAL_LABEL[b.goal]}</b>, budget ${inr(b.budget)}. Scripts are compared with ${esc(b.cat)} deals.`;
+}
+function setScriptText(sc) { SCRIPT_BASE = sc; $('#script').value = sc.text.split('Glowvera').join(curBrief().brand); }
+function pickScript(s) {
+  ACTIVE_SCRIPT = s.id; const own = BRIEFS.find(b => b.cat === s.cat); if (own) $('#sbrand').value = own.id; showBrief();
+  setScriptText(s); $('#hoWrap').classList.add('hide'); $('#chkout').innerHTML = '';
+  document.querySelectorAll('#spicks .pick').forEach(x => x.classList.toggle('on', x.dataset.id === s.id)); checkScript();
+}
+function brandChanged() {
+  showBrief();
+  if (SCRIPT_BASE && ACTIVE_SCRIPT === SCRIPT_BASE.id) setScriptText(SCRIPT_BASE);
+  if ($('#script').value.trim()) checkScript();
+}
+async function checkScript() {
+  const text = $('#script').value.trim(), preset = SCRIPTS.find(s => s.id === ACTIVE_SCRIPT && s.text.split('Glowvera').join(curBrief().brand).trim() === text);
+  $('#chkgo').disabled = true; $('#sspin').style.display = 'inline';
+  const d = await api('/api/score', {script: text, script_id: preset ? preset.id : null, brand: curBrief().brand, category: $('#scat').value, niche: $('#scat').value, tier: 'mid', format: 'reel', recent_deals: 1,
+    hook_override: $('#hoWrap').classList.contains('hide') ? '' : $('#shook').value});
+  $('#chkgo').disabled = false; $('#sspin').style.display = 'none';
+  const o = $('#chkout');
+  if (d.error) { o.innerHTML = `<div class="note err">${esc(d.error)}</div>`; return; }
+  const t = d.tags;
+  if (d.needs_input) { $('#hoWrap').classList.remove('hide'); o.innerHTML = `<div class="note"><b>The reader could not tell how this script opens.</b> Casual, mixed-language writing often has no clear opening. A guess would put a wrong value into the data, so it asks. Choose the closest option above and run it again.</div>`; return; }
+  o.innerHTML = `<h3 style="margin-top:16px">Step 1. Text becomes data fields</h3>
+    <div class="chips"><span class="chip">Opening: ${HOOK[t.hook_type] || t.hook_type}</span><span class="chip">Ask position: ${CTA[t.cta_position] || t.cta_position}</span><span class="chip">Language style: ${t.language_style}</span></div>
+    <h3 style="margin-top:14px">Step 2. How deals with this structure have performed</h3>
+    ${bars([{label:'This structure', value:d.current.roas[1]*100},{label:'Best structure', value:d.recommended.roas[1]*100}])}
+    <div class="sub">Typical return per Rs 100 for a mid-sized creator in ${esc($('#scat').value)}. This structure ranks ${d.rank} of ${d.n_options}. Its 80% range is ${per100(d.current.roas[0])} to ${per100(d.current.roas[2])}. The best structure here, ${HOOK[d.recommended.hook]} with the ask in the middle, has an 80% range of ${per100(d.recommended.roas[0])} to ${per100(d.recommended.roas[2])}.</div>
+    <div class="note" style="margin-top:12px"><b>For ${esc(curBrief().brand)}'s goal (${GOAL_LABEL[curBrief().goal]}).</b> ${curBrief().goal === 'sales' ? `Returns are the measure that matters here. This structure typically returns ${per100(d.current.roas[1])} per Rs 100, against ${per100(d.recommended.roas[1])} for the best one.` : `${curBrief().goal === 'reach' ? 'Reach is not modelled per script, so likes and comments are shown instead. ' : ''}Typical engagement rate: ${(d.current.eng[1]*100).toFixed(1)}% for this structure, ${(d.recommended.eng[1]*100).toFixed(1)}% for the best one. Script structure moves engagement less than it moves returns, so size and booking choices matter more.`}</div>`;
+}
+
+async function loadSample() {
+  const d = await api('/api/sample');
+  $('#dN').textContent = num(d.n_rows); $('#dC').textContent = d.n_cols;
+  const nm = c => c.replace(/_inr$/, ' (Rs)').replace(/_/g, ' ');
+  const f = (c, v) => v == null ? '' : c === 'engagement_rate' || c === 'ctr' ? (v*100).toFixed(2) + '%' : c === 'roas' ? v.toFixed(2) : ['followers','views','likes','comments','saves','shares','link_clicks','conversions','deal_value_inr','revenue_inr'].includes(c) ? Math.round(v).toLocaleString('en-IN') : typeof v === 'string' ? esc(v.replace(/_/g, ' ')) : v;
+  $('#sampleTbl').innerHTML = `<table><tr>${d.columns.map(c => `<th>${nm(c)}</th>`).join('')}</tr>` + d.rows.map(r => `<tr>${d.columns.map(c => `<td${typeof r[c] === 'number' ? ' class="n"' : ''}>${f(c, r[c])}</td>`).join('')}</tr>`).join('') + '</table>';
+}
+
+const GROUPS = {start:['start'], plan:['plan','scripts'], proof:['findings','evidence'], how:['how']};
+const PANE_LABEL = {plan:'Plan a campaign', scripts:'Check a script', findings:'Findings', evidence:'Evidence', how:'How it works'};
+const PANE2GROUP = {}; Object.entries(GROUPS).forEach(([g, ps]) => ps.forEach(p => PANE2GROUP[p] = g));
+function showTab(name) {
+  const g = PANE2GROUP[name] || 'start', active = PANE2GROUP[name] ? name : GROUPS[g][0];
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('hide', t.id !== 'tab-' + active));
+  document.querySelectorAll('.nav button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === g));
+  const seg = $('#seg'), ps = GROUPS[g];
+  seg.classList.toggle('hide', ps.length < 2);
+  seg.innerHTML = ps.length < 2 ? '' : ps.map(p => `<button data-pane="${p}" aria-pressed="${p === active}">${PANE_LABEL[p]}</button>`).join('');
+  seg.querySelectorAll('button').forEach(b => b.onclick = () => showTab(b.dataset.pane));
+  window.scrollTo(0, 0);
+}
+
+(async function init() {
+  [META, BENCH, EVID] = await Promise.all([api('/api/meta'), api('/api/benchmarks'), api('/api/evidence')]);
+  const catOpts = META.categories.map(c => `<option value="${c}">${cap(c)}</option>`).join('');
+  $('#cat').innerHTML = catOpts; $('#scat').innerHTML = catOpts; $('#sbrand').innerHTML = BRIEFS.map(b => `<option value="${b.id}">${b.brand} (${b.cat}, ${GOAL_LABEL[b.goal]}, ${inr(b.budget)})</option>`).join(''); $('#sbrand').onchange = brandChanged; showBrief();
+  $('#budget').innerHTML = BUDGETS.map(([v,l]) => `<option value="${v}">${l}</option>`).join('') + (PREVIEW ? '' : '<option value="other">Other amount...</option>');
+  $('#budget').onchange = () => $('#customWrap').classList.toggle('hide', $('#budget').value !== 'other');
+  $('#picks').innerHTML = BRIEFS.map(b => `<button class="pick" data-id="${b.id}"><b>${b.brand}, ${b.cat}</b><span>${b.tag}. ${b.note}</span></button>`).join('');
+  document.querySelectorAll('#picks .pick').forEach(el => el.onclick = () => { setBrief(BRIEFS.find(b => b.id === el.dataset.id)); run(); });
+  $('#spicks').innerHTML = SCRIPTS.map(s => `<button class="pick" data-id="${s.id}"><b>${s.name}</b><span>${s.note}</span></button>`).join('');
+  document.querySelectorAll('#spicks .pick').forEach(el => el.onclick = () => pickScript(SCRIPTS.find(s => s.id === el.dataset.id)));
+  for (const h of ['story','question','shock','social_proof','challenge','demo','direct_pitch']) $('#shook').insertAdjacentHTML('beforeend', `<option value="${h}">${cap(HOOK[h])}</option>`);
+  $('#go').onclick = run; $('#chkgo').onclick = checkScript;
+  $('#script').oninput = () => { ACTIVE_SCRIPT = null; $('#hoWrap').classList.add('hide'); };
+  if (PREVIEW) $('#previewNote').style.display = 'block'; else $('#rb').style.display = 'block';
+  document.querySelectorAll('.nav [data-tab]').forEach(b => b.onclick = () => showTab(GROUPS[b.dataset.tab][0]));
+  document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => showTab(b.dataset.go));
+  loadSample(); showTab('start'); renderFindings(); renderEvidence(); setBrief(BRIEFS[0]); run();
+})();
+</script>
+</body>
+</html>

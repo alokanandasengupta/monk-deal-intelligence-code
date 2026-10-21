@@ -1,0 +1,20 @@
+{
+  "sim_n": 1000,
+  "sim_hook_acc": 0.901,
+  "sim_cta_acc": 1.0,
+  "hand_n": 42,
+  "hand_hook_acc": 1.0,
+  "hand_cta_acc": 1.0,
+  "hand_unclear": 0,
+  "hook_acc_by_type": {
+    "story": 1.0,
+    "question": 1.0,
+    "shock": 1.0,
+    "social_proof": 1.0,
+    "challenge": 1.0,
+    "demo": 1.0,
+    "direct_pitch": 1.0
+  },
+  "top_confusions": [],
+  "language_style_hinglish_detected": 14
+}
